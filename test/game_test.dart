@@ -20,6 +20,6 @@ void main() {
   testWidgets('Shows the table hand cards', (tester) async {
     await tester.pumpWidget(MaterialApp(home: GamePage(game: Game({}))));
 
-    expect(find.byType(PlayerCard), findsWidgets);
+    expect(find.byType(GameCard), findsWidgets);
   });
 }
