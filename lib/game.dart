@@ -55,7 +55,15 @@ class _GamePageState extends State<GamePage> {
               ),
             ),
           ),
-          Expanded(flex: 2, child: Placeholder(child: Text('Player grid'))),
+          Expanded(
+              flex: 3,
+              child: GridView.count(
+                crossAxisCount: 5,
+                children: [
+                  for (final seat in widget.game.table.seats)
+                    Center(child: Text(seat.player!.name))
+                ],
+              )),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game.dart';
 import 'package:scopa_lib/scopa_lib.dart';
+import 'package:scopa_lib/tabletop_lib.dart';
 
 void main() {
   runApp(const ScopaApp());
@@ -35,7 +36,10 @@ class HomePage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                         builder: (context) => GamePage(
-                              game: Game({}),
+                              game: Game({
+                                Team.players([Player('Test 1')]),
+                                Team.players([Player('Test 2')]),
+                              }),
                             )));
               },
               child: const Text('Start Game'))),
