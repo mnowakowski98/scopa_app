@@ -57,11 +57,13 @@ class _GamePageState extends State<GamePage> {
           ),
           Expanded(
               flex: 3,
-              child: GridView.count(
-                crossAxisCount: 5,
+              child: Wrap(
                 children: [
                   for (final seat in widget.game.table.seats)
-                    Center(child: Text(seat.player!.name))
+                    Padding(
+                      padding: const EdgeInsets.all(4),
+                      child: Text(seat.player!.name),
+                    )
                 ],
               )),
         ],
