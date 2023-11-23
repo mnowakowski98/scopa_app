@@ -1,22 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scopa_app/game_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
-
-class GameCard extends StatelessWidget {
-  const GameCard({super.key, required this.card});
-
-  final tabletop_lib.Card card;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(card.value.toString()),
-        Text(card.suite),
-      ],
-    );
-  }
-}
 
 class GamePage extends StatefulWidget {
   const GamePage({super.key, required this.game});
