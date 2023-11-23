@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
+import 'package:scopa_app/game_card.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 class PlayerCard extends StatelessWidget {
@@ -14,7 +15,16 @@ class PlayerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return Card(
+      child: Column(children: [
+        Text(name),
+        Row(
+          children: [for (final card in hand) GameCard(card: card)],
+        ),
+        Row(
+          children: [for (final card in fishes) GameCard(card: card)],
+        )
+      ]),
+    );
   }
 }

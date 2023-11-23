@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game_card.dart';
+import 'package:scopa_app/player_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
@@ -45,10 +46,10 @@ class _GamePageState extends State<GamePage> {
               child: Wrap(
                 children: [
                   for (final seat in widget.game.table.seats)
-                    Padding(
-                      padding: const EdgeInsets.all(4),
-                      child: Text(seat.player!.name),
-                    )
+                    PlayerCard(
+                        name: seat.player!.name,
+                        hand: currentRound.playerHands[seat.player]!.cards,
+                        fishes: currentRound.captureHands[seat.player]!.cards)
                 ],
               )),
         ],

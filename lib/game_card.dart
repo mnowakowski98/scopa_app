@@ -9,11 +9,14 @@ class GameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        children: [
-          Text(card.value.toString()),
-          Text(card.suite),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Text(card.value.toString()),
+            Text(card.suite),
+          ],
+        ),
       ),
     );
   }
