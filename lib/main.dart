@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game.dart';
+import 'package:scopa_lib/scopa_lib.dart';
 
 void main() {
   runApp(const ScopaApp());
@@ -30,8 +31,12 @@ class HomePage extends StatelessWidget {
       body: Center(
           child: ElevatedButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => GamePage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => GamePage(
+                              game: Game({}),
+                            )));
               },
               child: const Text('Start Game'))),
     );
