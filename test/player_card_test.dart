@@ -28,4 +28,17 @@ void main() {
     expect(find.textContaining('TestSuite'), findsOneWidget);
     expect(find.textContaining('1'), findsOneWidget);
   });
+
+  testWidgets('Highlights green when it is current', (widgetTester) async {
+    await widgetTester.pumpWidget(const MaterialApp(
+        home: PlayerCard(
+      name: 'Test',
+      hand: [],
+      fishes: [],
+      isCurrent: true,
+    )));
+
+    final card = widgetTester.widget<Card>(find.byType(Card).first);
+    expect(card.color, equals(Colors.green));
+  });
 }

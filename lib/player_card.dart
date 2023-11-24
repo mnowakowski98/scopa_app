@@ -7,8 +7,10 @@ class PlayerCard extends StatelessWidget {
       {super.key,
       required this.name,
       required this.hand,
-      required this.fishes});
+      required this.fishes,
+      this.isCurrent = false});
 
+  final bool isCurrent;
   final String name;
   final List<tabletop_lib.Card> hand;
   final List<tabletop_lib.Card> fishes;
@@ -16,6 +18,7 @@ class PlayerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: isCurrent ? Colors.green : null,
       child: Column(children: [
         Text(name),
         Row(

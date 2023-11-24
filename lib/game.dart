@@ -47,9 +47,11 @@ class _GamePageState extends State<GamePage> {
                 children: [
                   for (final seat in widget.game.table.seats)
                     PlayerCard(
-                        name: seat.player!.name,
-                        hand: currentRound.playerHands[seat.player]!.cards,
-                        fishes: currentRound.captureHands[seat.player]!.cards)
+                      name: seat.player!.name,
+                      hand: currentRound.playerHands[seat.player]!.cards,
+                      fishes: currentRound.captureHands[seat.player]!.cards,
+                      isCurrent: seat.player == currentRound.currentPlayer,
+                    ),
                 ],
               )),
         ],
