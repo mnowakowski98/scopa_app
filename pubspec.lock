@@ -120,7 +120,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "52dff48130017160414843cfab61c3f9c859aa0f"
+      resolved-ref: "7acfe8e0f616a5dab81910931411470f7560e583"
       url: "https://github.com/mnowakowski98/scopa_lib"
     source: git
     version: "0.5.0"
