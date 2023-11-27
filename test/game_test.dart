@@ -9,17 +9,17 @@ void main() {
   testWidgets('Shows a list of players', (tester) async {
     await tester.pumpWidget(MaterialApp(
       home: GamePage(
-          game: Game({
+          game: Game([
         Team.players([Player('Test 1')]),
         Team.players([Player('Test 2')]),
-      })),
+      ])),
     ));
 
     expect(find.text('Test 1'), findsOneWidget);
     expect(find.text('Test 2'), findsOneWidget);
   });
   testWidgets('Shows the table hand cards', (tester) async {
-    await tester.pumpWidget(MaterialApp(home: GamePage(game: Game({}))));
+    await tester.pumpWidget(MaterialApp(home: GamePage(game: Game([]))));
 
     expect(find.byType(GameCard), findsWidgets);
   });
