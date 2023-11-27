@@ -43,14 +43,22 @@ class _GamePageState extends State<GamePage> {
           ),
           Expanded(
               flex: 3,
-              child: Wrap(
+              child: Row(
                 children: [
-                  for (final seat in widget.game.table.seats)
-                    PlayerCard(
-                      name: seat.player!.name,
-                      hand: currentRound.playerHands[seat.player]!.cards,
-                      fishes: currentRound.captureHands[seat.player]!.cards,
-                      isCurrent: seat.player == currentRound.currentPlayer,
+                  for (final team in widget.game.teams)
+                    Column(
+                      children: [
+                        const Placeholder(
+                          child: Text('Team name should go here'),
+                        ),
+                        for (final player in team.players)
+                          PlayerCard(
+                            name: player.name,
+                            hand: currentRound.playerHands[player]!.cards,
+                            fishes: currentRound.captureHands[player]!.cards,
+                            isCurrent: player == currentRound.currentPlayer,
+                          )
+                      ],
                     ),
                 ],
               )),
