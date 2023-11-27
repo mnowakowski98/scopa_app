@@ -19,15 +19,33 @@ class PlayerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: isCurrent ? Colors.green : null,
-      child: Column(children: [
-        Text(name),
-        Row(
-          children: [for (final card in hand) GameCard(card: card)],
-        ),
-        Row(
-          children: [for (final card in fishes) GameCard(card: card)],
-        )
-      ]),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [for (final card in hand) GameCard(card: card)],
+            ),
+          ),
+          if (fishes.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                children: [for (final card in fishes) GameCard(card: card)],
+              ),
+            )
+          else
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text('No fish'),
+            )
+        ]),
+      ),
     );
   }
 }
