@@ -37,10 +37,16 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => GamePage(
                               game: Game([
-                                Team.players([Player('Test 1')],
-                                    name: 'Team 1'),
-                                Team.players([Player('Test 2')],
-                                    name: 'Team 2'),
+                                Team.players([
+                                  Player('1-1'),
+                                  Player('1-2'),
+                                  Player('1-3'),
+                                ], name: 'Team 1'),
+                                Team.players([
+                                  Player('2-1'),
+                                  Player('2-2'),
+                                  Player('2-3'),
+                                ], name: 'Team 2'),
                               ]),
                             )));
               },

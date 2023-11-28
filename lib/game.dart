@@ -16,61 +16,68 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   late ScopaRound currentRound;
   late List<tabletop_lib.Card> tableCards;
+  late Map<String, List<tabletop_lib.Card>> playerCards;
+  late Map<String, List<tabletop_lib.Card>> playerFishes;
 
   @override
   void initState() {
     super.initState();
     currentRound = widget.game.nextRound();
     tableCards = List.unmodifiable(widget.game.table.round.cards);
+    playerCards = Map.unmodifiable(currentRound.playerHands
+        .map((key, value) => MapEntry(key.name, value.cards)));
+    playerFishes = Map.unmodifiable(currentRound.captureHands
+        .map((key, value) => MapEntry(key.name, value.cards)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Game')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: FittedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(children: [
-                  for (final card in tableCards) GameCard(card: card)
-                ]),
-              ),
-            ),
-          ),
-          Expanded(
-              flex: 3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.builder(
-                    itemCount: widget.game.teams.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: ((context, index) {
-                      final team = widget.game.teams[index];
-                      final firstPlayer = team.players[0];
-                      return Card(
-                        child: Column(
+        appBar: AppBar(title: const Text('Game')),
+        body: NestedScrollView(
+            headerSliverBuilder: (context, q) => [
+                  SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Wrap(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(team.name),
-                            ),
-                            PlayerCard(
-                                name: firstPlayer.name,
-                                hand: currentRound
-                                    .playerHands[firstPlayer]!.cards,
-                                fishes: currentRound
-                                    .playerHands[firstPlayer]!.cards)
+                            for (final card in tableCards) GameCard(card: card)
                           ],
                         ),
-                      );
-                    })),
-              )),
-        ],
-      ),
-    );
+                      ),
+                    ),
+                  )
+                ],
+            body: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
+                itemCount: widget.game.teams.length,
+                itemBuilder: ((context, index) {
+                  final team = widget.game.teams[index];
+                  return Card(
+                      child: NestedScrollView(
+                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                      SliverToBoxAdapter(
+                          child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(children: [
+                          Text(team.name),
+                          const Text('[team.score]'),
+                        ]),
+                      ))
+                    ],
+                    body: ListView.builder(
+                      itemCount: team.players.length,
+                      itemBuilder: (context, index) {
+                        final player = team.players[index];
+                        return PlayerCard(
+                            name: player.name,
+                            hand: playerCards[player.name]!,
+                            fishes: playerFishes[player.name]!);
+                      },
+                    ),
+                  ));
+                }))));
   }
 }
