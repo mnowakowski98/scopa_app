@@ -15,7 +15,7 @@ class PlayerCard extends StatelessWidget {
   final String name;
   final List<tabletop_lib.Card> hand;
   final List<tabletop_lib.Card> fishes;
-  final void Function()? onHandCardTap;
+  final void Function(tabletop_lib.Card card)? onHandCardTap;
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,15 @@ class PlayerCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
-                children: [for (final card in hand) GameCard(card: card)],
+                children: [
+                  for (final card in hand)
+                    GameCard(
+                      card: card,
+                      onTap: () {
+                        if (onHandCardTap != null) onHandCardTap!(card);
+                      },
+                    )
+                ],
               ),
             )
           else
@@ -44,7 +52,12 @@ class PlayerCard extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Wrap(
-                children: [for (final card in fishes) GameCard(card: card)],
+                children: [
+                  for (final card in fishes)
+                    GameCard(
+                      card: card,
+                    )
+                ],
               ),
             )
           else

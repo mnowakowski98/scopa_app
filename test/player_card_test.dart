@@ -42,20 +42,20 @@ void main() {
     expect(card.color, equals(Colors.green));
   });
 
-  testWidgets('Calls handCardTap when a hand card is tapped',
+  testWidgets('Calls onHandCardTap when a hand card is tapped',
       (widgetTester) async {
-    var callbackWasCalled = false;
+    tabletop_lib.Card? callbackCard;
 
     await widgetTester.pumpWidget(MaterialApp(
         home: PlayerCard(
             name: 'Test',
             hand: const [tabletop_lib.Card('TestSuite', 5)],
             fishes: const [],
-            onHandCardTap: () {
-              callbackWasCalled = true;
+            onHandCardTap: (card) {
+              callbackCard = card;
             })));
 
     await widgetTester.tap(find.text('TestSuite'));
-    expect(callbackWasCalled, isTrue);
+    expect(callbackCard, isNotNull);
   });
 }
