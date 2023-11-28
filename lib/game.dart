@@ -19,15 +19,22 @@ class _GamePageState extends State<GamePage> {
   late Map<String, List<tabletop_lib.Card>> playerCards;
   late Map<String, List<tabletop_lib.Card>> playerFishes;
 
-  @override
-  void initState() {
-    super.initState();
+  String? currentPlayer;
+
+  void _initRoundState() {
     currentRound = widget.game.nextRound();
     tableCards = List.unmodifiable(widget.game.table.round.cards);
     playerCards = Map.unmodifiable(currentRound.playerHands
         .map((key, value) => MapEntry(key.name, value.cards)));
     playerFishes = Map.unmodifiable(currentRound.captureHands
         .map((key, value) => MapEntry(key.name, value.cards)));
+    currentPlayer = currentRound.currentPlayer?.name;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initRoundState();
   }
 
   @override
@@ -36,6 +43,17 @@ class _GamePageState extends State<GamePage> {
         appBar: AppBar(title: const Text('Game')),
         body: NestedScrollView(
             headerSliverBuilder: (context, q) => [
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Wrap(
+                        children: [
+                          ElevatedButton(
+                              onPressed: null, child: Text('Test play'))
+                        ],
+                      ),
+                    ),
+                  ),
                   SliverToBoxAdapter(
                     child: Center(
                       child: Padding(
@@ -57,12 +75,16 @@ class _GamePageState extends State<GamePage> {
                   final team = widget.game.teams[index];
                   return Card(
                       child: NestedScrollView(
+                    floatHeaderSlivers: true,
                     headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverToBoxAdapter(
                           child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(children: [
-                          Text(team.name),
+                          Text(
+                            team.name,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                           const Text('[team.score]'),
                         ]),
                       ))
@@ -75,7 +97,7 @@ class _GamePageState extends State<GamePage> {
                           name: player.name,
                           hand: playerCards[player.name]!,
                           fishes: playerFishes[player.name]!,
-                          isCurrent: currentRound.currentPlayer == player,
+                          isCurrent: currentPlayer == player.name,
                         );
                       },
                     ),
