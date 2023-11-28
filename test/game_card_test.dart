@@ -11,4 +11,19 @@ void main() {
     expect(find.text('Test'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
   });
+
+  testWidgets('Calls onTap when tapped', (widgetTester) async {
+    var callbackWasCalled = false;
+    await widgetTester.pumpWidget(MaterialApp(
+        home: GameCard(
+      card: const tabletop_lib.Card('Test', 1),
+      onTap: () {
+        callbackWasCalled = true;
+      },
+    )));
+
+    await widgetTester.tap(find.text('Test'));
+
+    expect(callbackWasCalled, isTrue);
+  });
 }
