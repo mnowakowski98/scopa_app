@@ -26,4 +26,16 @@ void main() {
 
     expect(callbackWasCalled, isTrue);
   });
+
+  testWidgets('Is highlighted blue when selected', (widgetTester) async {
+    await widgetTester.pumpWidget(const MaterialApp(
+        home: GameCard(
+      card: tabletop_lib.Card('Test', 1),
+      isSelected: true,
+    )));
+
+    final card = widgetTester.widget<Card>(find.byType(Card));
+
+    expect(card.color, equals(Colors.blue));
+  });
 }

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 class GameCard extends StatelessWidget {
-  const GameCard({super.key, required this.card, this.onTap});
+  const GameCard(
+      {super.key, required this.card, this.isSelected = false, this.onTap});
 
   final tabletop_lib.Card card;
+  final bool isSelected;
   final void Function()? onTap;
 
   @override
