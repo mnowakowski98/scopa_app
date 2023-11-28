@@ -26,12 +26,18 @@ class PlayerCard extends StatelessWidget {
             name,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [for (final card in hand) GameCard(card: card)],
+          if (hand.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                children: [for (final card in hand) GameCard(card: card)],
+              ),
+            )
+          else
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: Text('No cards'),
             ),
-          ),
           if (fishes.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(8.0),
