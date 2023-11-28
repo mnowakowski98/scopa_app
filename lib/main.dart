@@ -18,7 +18,7 @@ class ScopaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(),
+      home: const SafeArea(child: HomePage()),
     );
   }
 }
@@ -37,8 +37,10 @@ class HomePage extends StatelessWidget {
                     MaterialPageRoute(
                         builder: (context) => GamePage(
                               game: Game([
-                                Team.players([Player('Test 1')]),
-                                Team.players([Player('Test 2')]),
+                                Team.players([Player('Test 1')],
+                                    name: 'Team 1'),
+                                Team.players([Player('Test 2')],
+                                    name: 'Team 2'),
                               ]),
                             )));
               },

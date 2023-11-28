@@ -43,24 +43,31 @@ class _GamePageState extends State<GamePage> {
           ),
           Expanded(
               flex: 3,
-              child: Row(
-                children: [
-                  for (final team in widget.game.teams)
-                    Column(
-                      children: [
-                        const Placeholder(
-                          child: Text('Team name should go here'),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                    itemCount: widget.game.teams.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: ((context, index) {
+                      final team = widget.game.teams[index];
+                      final firstPlayer = team.players[0];
+                      return Card(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(team.name),
+                            ),
+                            PlayerCard(
+                                name: firstPlayer.name,
+                                hand: currentRound
+                                    .playerHands[firstPlayer]!.cards,
+                                fishes: currentRound
+                                    .playerHands[firstPlayer]!.cards)
+                          ],
                         ),
-                        for (final player in team.players)
-                          PlayerCard(
-                            name: player.name,
-                            hand: currentRound.playerHands[player]!.cards,
-                            fishes: currentRound.captureHands[player]!.cards,
-                            isCurrent: player == currentRound.currentPlayer,
-                          )
-                      ],
-                    ),
-                ],
+                      );
+                    })),
               )),
         ],
       ),
