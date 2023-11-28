@@ -72,9 +72,11 @@ class _GamePageState extends State<GamePage> {
                       itemBuilder: (context, index) {
                         final player = team.players[index];
                         return PlayerCard(
-                            name: player.name,
-                            hand: playerCards[player.name]!,
-                            fishes: playerFishes[player.name]!);
+                          name: player.name,
+                          hand: playerCards[player.name]!,
+                          fishes: playerFishes[player.name]!,
+                          isCurrent: currentRound.currentPlayer == player,
+                        );
                       },
                     ),
                   ));
