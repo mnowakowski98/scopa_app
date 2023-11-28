@@ -8,12 +8,14 @@ class PlayerCard extends StatelessWidget {
       required this.name,
       required this.hand,
       required this.fishes,
-      this.isCurrent = false});
+      this.isCurrent = false,
+      this.onHandCardTapped});
 
   final bool isCurrent;
   final String name;
   final List<tabletop_lib.Card> hand;
   final List<tabletop_lib.Card> fishes;
+  final void Function()? onHandCardTapped;
 
   @override
   Widget build(BuildContext context) {

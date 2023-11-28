@@ -41,4 +41,21 @@ void main() {
     final card = widgetTester.widget<Card>(find.byType(Card).first);
     expect(card.color, equals(Colors.green));
   });
+
+  testWidgets('Calls handCardTapped when a hand card is tapped',
+      (widgetTester) async {
+    var callbackWasCalled = false;
+
+    await widgetTester.pumpWidget(MaterialApp(
+        home: PlayerCard(
+            name: 'Test',
+            hand: const [tabletop_lib.Card('Denari', 5)],
+            fishes: const [],
+            onHandCardTapped: () {
+              callbackWasCalled = true;
+            })));
+
+    await widgetTester.tap(find.text('Denari'));
+    expect(callbackWasCalled, isTrue);
+  });
 }
