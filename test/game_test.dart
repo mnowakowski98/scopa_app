@@ -37,4 +37,25 @@ void main() {
         .first);
     expect(player1Card.color, equals(Colors.green));
   });
+
+  testWidgets('Highlights a card blue in the current player hand on tap',
+      (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(
+        home: GamePage(
+            game: Game([
+      Team.players([Player('Test')])
+    ]))));
+
+    final playerCard =
+        find.ancestor(of: find.text('Test'), matching: find.byType(Card)).first;
+
+    final gameCard =
+        find.descendant(of: playerCard, matching: find.byType(GameCard).first);
+
+    // This line doesn't actually work for some reason
+    final gameCardRoot = widgetTester.widget<Card>(
+        find.descendant(of: gameCard, matching: find.byType(Card)));
+
+    expect(gameCardRoot.color, equals(Colors.blue));
+  });
 }
