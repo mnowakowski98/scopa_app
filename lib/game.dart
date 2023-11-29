@@ -23,8 +23,7 @@ class _GamePageState extends State<GamePage> {
 
   String? currentPlayer;
 
-  void _initRoundState() {
-    currentRound = widget.game.nextRound();
+  void _refreshGameState() {
     tableCards = List.unmodifiable(widget.game.table.round.cards);
     playerCards = Map.unmodifiable(currentRound.playerHands
         .map((key, value) => MapEntry(key.name, value.cards)));
@@ -37,7 +36,8 @@ class _GamePageState extends State<GamePage> {
   @override
   void initState() {
     super.initState();
-    _initRoundState();
+    currentRound = widget.game.nextRound();
+    _refreshGameState();
   }
 
   @override
@@ -46,13 +46,23 @@ class _GamePageState extends State<GamePage> {
         appBar: AppBar(title: const Text('Game')),
         body: NestedScrollView(
             headerSliverBuilder: (context, q) => [
-                  const SliverToBoxAdapter(
+                  SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Wrap(
                         children: [
                           ElevatedButton(
-                              onPressed: null, child: Text('Test play'))
+                              onPressed: () {
+                                if (playerCards[currentPlayer]!.isNotEmpty) {
+                                  currentRound
+                                      .play(playerCards[currentPlayer]!.first);
+                                }
+
+                                setState(() {
+                                  _refreshGameState();
+                                });
+                              },
+                              child: const Text('Test play'))
                         ],
                       ),
                     ),
