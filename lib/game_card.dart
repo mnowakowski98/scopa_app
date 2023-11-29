@@ -11,17 +11,21 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Card(
-        color: isSelected ? Colors.blue : null,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Text(card.value.toString()),
-              Text(card.suite),
-            ],
+    return Draggable<tabletop_lib.Card>(
+      data: card,
+      feedback: const Placeholder(),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Card(
+          color: isSelected ? Colors.blue : null,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text(card.value.toString()),
+                Text(card.suite),
+              ],
+            ),
           ),
         ),
       ),

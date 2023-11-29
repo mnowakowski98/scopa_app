@@ -33,6 +33,12 @@ class _GamePageState extends State<GamePage> {
     selectedHandCard = null;
   }
 
+  void _resetGameState() {
+    setState(() {
+      _refreshGameState();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -47,29 +53,12 @@ class _GamePageState extends State<GamePage> {
         body: NestedScrollView(
             headerSliverBuilder: (context, q) => [
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                if (playerCards[currentPlayer]!.isNotEmpty) {
-                                  currentRound
-                                      .play(playerCards[currentPlayer]!.first);
-                                }
-
-                                setState(() {
-                                  _refreshGameState();
-                                });
-                              },
-                              child: const Text('Test play'))
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
                       child: TableHand(
                     cards: tableCards,
+                    onCardDrag: (card) {
+                      currentRound.play(card);
+                      _resetGameState();
+                    },
                   ))
                 ],
             body: GridView.builder(
