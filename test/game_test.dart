@@ -81,6 +81,9 @@ void main() {
     final gameCardSuite =
         find.descendant(of: gameCard, matching: find.byType(Text)).last;
 
+    final suite = widgetTester.widget<Text>(gameCardSuite).data!;
+    final value = widgetTester.widget<Text>(gameCardValue).data!;
+
     final tablehand = find.byType(TableHand);
     final tableHandCenter = widgetTester.getCenter(tablehand);
 
@@ -92,9 +95,9 @@ void main() {
     await gesture.up();
     await widgetTester.pump();
 
-    expect(find.descendant(of: tablehand, matching: gameCardSuite),
+    expect(find.descendant(of: tablehand, matching: find.text(suite)),
         findsOneWidget);
-    expect(find.descendant(of: tablehand, matching: gameCardValue),
+    expect(find.descendant(of: tablehand, matching: find.text(value)),
         findsOneWidget);
   });
 }
