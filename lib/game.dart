@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_app/game_card.dart';
 import 'package:scopa_app/player_card.dart';
+import 'package:scopa_app/table_hand.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
@@ -68,17 +68,9 @@ class _GamePageState extends State<GamePage> {
                     ),
                   ),
                   SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          children: [
-                            for (final card in tableCards) GameCard(card: card)
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                      child: TableHand(
+                    cards: tableCards,
+                  ))
                 ],
             body: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
