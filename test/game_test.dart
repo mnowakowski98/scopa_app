@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scopa_app/game.dart';
 import 'package:scopa_app/game_card.dart';
+import 'package:scopa_app/player_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' hide Card;
 
@@ -47,16 +48,18 @@ void main() {
       Team.players([Player('Test 2')]),
     ]))));
 
-    final playerCard =
-        find.ancestor(of: find.text('Test 1'), matching: find.byType(Card));
-
+    final playerCard = find.byType(PlayerCard).first;
     final gameCard =
-        find.descendant(of: playerCard, matching: find.byType(GameCard));
+        find.descendant(of: playerCard, matching: find.byType(GameCard)).first;
 
-    // This line doesn't actually work for some reason
-    final gameCardRoot = widgetTester.widget<Card>(
-        find.descendant(of: gameCard, matching: find.byType(Card)).first);
+    final gameCardRoot =
+        find.descendant(of: gameCard, matching: find.byType(Card));
 
-    expect(gameCardRoot.color, equals(Colors.blue));
+    await widgetTester.tap(gameCard);
+    await widgetTester.pumpAndSettle();
+
+    final gameCardWidget = widgetTester.widget<Card>(gameCardRoot);
+
+    expect(gameCardWidget.color, equals(Colors.blue));
   });
 }
