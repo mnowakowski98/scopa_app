@@ -43,18 +43,19 @@ void main() {
     await widgetTester.pumpWidget(MaterialApp(
         home: GamePage(
             game: Game([
-      Team.players([Player('Test')])
+      Team.players([Player('Test 1')]),
+      Team.players([Player('Test 2')]),
     ]))));
 
     final playerCard =
-        find.ancestor(of: find.text('Test'), matching: find.byType(Card)).first;
+        find.ancestor(of: find.text('Test 1'), matching: find.byType(Card));
 
     final gameCard =
-        find.descendant(of: playerCard, matching: find.byType(GameCard).first);
+        find.descendant(of: playerCard, matching: find.byType(GameCard));
 
     // This line doesn't actually work for some reason
     final gameCardRoot = widgetTester.widget<Card>(
-        find.descendant(of: gameCard, matching: find.byType(Card)));
+        find.descendant(of: gameCard, matching: find.byType(Card)).first);
 
     expect(gameCardRoot.color, equals(Colors.blue));
   });
