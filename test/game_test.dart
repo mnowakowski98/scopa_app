@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:scopa_app/game.dart';
 import 'package:scopa_app/game_card.dart';
 import 'package:scopa_app/player_card.dart';
+import 'package:scopa_app/table_hand.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' hide Card;
 
@@ -61,5 +62,39 @@ void main() {
     final gameCardWidget = widgetTester.widget<Card>(gameCardRoot);
 
     expect(gameCardWidget.color, equals(Colors.blue));
+  });
+
+  testWidgets('Can drag a card from the player hand to the table to play it',
+      (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(
+        home: GamePage(
+            game: Game([
+      Team.players([Player('Test')])
+    ]))));
+
+    final playerCard = find.byType(PlayerCard).first;
+    final gameCard =
+        find.descendant(of: playerCard, matching: find.byType(GameCard)).first;
+    final gameCardCenter = widgetTester.getCenter(gameCard);
+    final gameCardValue =
+        find.descendant(of: gameCard, matching: find.byType(Text)).first;
+    final gameCardSuite =
+        find.descendant(of: gameCard, matching: find.byType(Text)).last;
+
+    final tablehand = find.byType(TableHand);
+    final tableHandCenter = widgetTester.getCenter(tablehand);
+
+    final gesture = await widgetTester.startGesture(gameCardCenter);
+    await widgetTester.pump();
+
+    await gesture.moveTo(tableHandCenter);
+    await widgetTester.pump();
+    await gesture.up();
+    await widgetTester.pump();
+
+    expect(find.descendant(of: tablehand, matching: gameCardSuite),
+        findsOneWidget);
+    expect(find.descendant(of: tablehand, matching: gameCardValue),
+        findsOneWidget);
   });
 }
