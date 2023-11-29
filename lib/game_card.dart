@@ -11,10 +11,10 @@ class GameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: isSelected ? Colors.blue : null,
-      child: GestureDetector(
-        onTap: onTap,
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        color: isSelected ? Colors.blue : null,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(

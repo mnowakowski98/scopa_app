@@ -19,6 +19,8 @@ class _GamePageState extends State<GamePage> {
   late Map<String, List<tabletop_lib.Card>> playerCards;
   late Map<String, List<tabletop_lib.Card>> playerFishes;
 
+  tabletop_lib.Card? selectedHandCard;
+
   String? currentPlayer;
 
   void _initRoundState() {
@@ -29,6 +31,7 @@ class _GamePageState extends State<GamePage> {
     playerFishes = Map.unmodifiable(currentRound.captureHands
         .map((key, value) => MapEntry(key.name, value.cards)));
     currentPlayer = currentRound.currentPlayer?.name;
+    selectedHandCard = null;
   }
 
   @override
@@ -98,6 +101,12 @@ class _GamePageState extends State<GamePage> {
                           hand: playerCards[player.name]!,
                           fishes: playerFishes[player.name]!,
                           isCurrent: currentPlayer == player.name,
+                          selectedHandCard: selectedHandCard,
+                          onHandCardTap: (card) {
+                            setState(() {
+                              selectedHandCard = card;
+                            });
+                          },
                         );
                       },
                     ),

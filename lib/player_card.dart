@@ -9,12 +9,14 @@ class PlayerCard extends StatelessWidget {
       required this.hand,
       required this.fishes,
       this.isCurrent = false,
-      this.onHandCardTap});
+      this.onHandCardTap,
+      this.selectedHandCard});
 
   final bool isCurrent;
   final String name;
   final List<tabletop_lib.Card> hand;
   final List<tabletop_lib.Card> fishes;
+  final tabletop_lib.Card? selectedHandCard;
   final void Function(tabletop_lib.Card card)? onHandCardTap;
 
   @override
@@ -39,6 +41,7 @@ class PlayerCard extends StatelessWidget {
                       onTap: () {
                         if (onHandCardTap != null) onHandCardTap!(card);
                       },
+                      isSelected: selectedHandCard == card,
                     )
                 ],
               ),
