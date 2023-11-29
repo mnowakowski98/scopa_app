@@ -115,6 +115,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  scopa_lib:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: fe7bb0f52e8b7450928d8d4dfbc76c6daabcdda4
+      url: "https://github.com/mnowakowski98/scopa_lib"
+    source: git
+    version: "0.5.0"
   sky_engine:
     dependency: transitive
     description: flutter
