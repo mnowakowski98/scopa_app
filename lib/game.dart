@@ -56,7 +56,9 @@ class _GamePageState extends State<GamePage> {
                       child: TableHand(
                     cards: tableCards,
                     onCardDrag: (card) {
-                      currentRound.play(card);
+                      if (playerCards[currentPlayer]!.contains(card)) {
+                        currentRound.play(card);
+                      }
                       _resetGameState();
                     },
                   ))

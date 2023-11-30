@@ -121,4 +121,38 @@ void main() {
 
     expect(gameCardInTableHand, findsOneWidget);
   });
+
+  testWidgets('Can not play a card from a non-current player hand',
+      (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(
+        home: GamePage(
+            game: Game([
+      Team.players([Player('Test 1'), Player('Test 2')])
+    ]))));
+
+    final playerCard = find.byType(PlayerCard).last;
+    final gameCard =
+        find.descendant(of: playerCard, matching: find.byType(GameCard)).first;
+    final gameCardCenter = widgetTester.getCenter(gameCard);
+    final gameCardText =
+        find.descendant(of: gameCard, matching: find.byType(Text)).first;
+
+    final gameCardString = widgetTester.widget<Text>(gameCardText).data!;
+
+    final tablehand = find.byType(TableHand);
+    final tableHandCenter = widgetTester.getCenter(tablehand);
+
+    final gesture = await widgetTester.startGesture(gameCardCenter);
+    await widgetTester.pump();
+
+    await gesture.moveTo(tableHandCenter);
+    await widgetTester.pump();
+    await gesture.up();
+    await widgetTester.pump();
+
+    final gameCardInTableHand =
+        find.descendant(of: tablehand, matching: find.text(gameCardString));
+
+    expect(gameCardInTableHand, findsNothing);
+  });
 }
