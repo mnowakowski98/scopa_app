@@ -20,11 +20,9 @@ class GameCard extends StatelessWidget {
           color: isSelected ? Colors.blue : null,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Text(card.value.toString()),
-                Text(card.suite),
-              ],
+            child: Text(
+              '${card.value}\n${card.suite}',
+              textAlign: TextAlign.center,
             ),
           ),
         ),
