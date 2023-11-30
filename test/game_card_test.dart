@@ -8,8 +8,7 @@ void main() {
     await widgetTester.pumpWidget(
         const MaterialApp(home: GameCard(card: tabletop_lib.Card('Test', 1))));
 
-    expect(find.text('Test'), findsOneWidget);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('1\nTest'), findsOneWidget);
   });
 
   testWidgets('Calls onTap when tapped', (widgetTester) async {
@@ -22,7 +21,7 @@ void main() {
       },
     )));
 
-    await widgetTester.tap(find.text('Test'));
+    await widgetTester.tap(find.textContaining('Test'));
 
     expect(callbackWasCalled, isTrue);
   });

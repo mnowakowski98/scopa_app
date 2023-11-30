@@ -55,7 +55,7 @@ void main() {
               callbackCard = card;
             })));
 
-    await widgetTester.tap(find.text('TestSuite'));
+    await widgetTester.tap(find.textContaining('TestSuite'));
     expect(callbackCard, isNotNull);
   });
 }
