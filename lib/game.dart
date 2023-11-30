@@ -94,9 +94,11 @@ class _GamePageState extends State<GamePage> {
                           isCurrent: currentPlayer == player.name,
                           selectedHandCard: selectedHandCard,
                           onHandCardTap: (card) {
-                            setState(() {
-                              selectedHandCard = card;
-                            });
+                            if (player.name == currentPlayer) {
+                              setState(() {
+                                selectedHandCard = card;
+                              });
+                            }
                           },
                         );
                       },
