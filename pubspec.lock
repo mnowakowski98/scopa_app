@@ -119,8 +119,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: fe7bb0f52e8b7450928d8d4dfbc76c6daabcdda4
+      ref: GameScoring
+      resolved-ref: b53fe703cd6208dcc2c3cdcd7fc1e332f95d695d
       url: "https://github.com/mnowakowski98/scopa_lib"
     source: git
     version: "0.5.0"

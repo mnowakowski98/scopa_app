@@ -12,7 +12,9 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.2
   scopa_lib:
-    git: https://github.com/mnowakowski98/scopa_lib
+    git:
+      url: https://github.com/mnowakowski98/scopa_lib 
+      ref: GameScoring
 
 dev_dependencies:
   flutter_test:

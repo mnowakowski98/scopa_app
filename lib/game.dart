@@ -99,7 +99,7 @@ class _GamePageState extends State<GamePage> {
                             team.name,
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          const Text('[team.score]'),
+                          Text(widget.game.teamScores[team].toString()),
                         ]),
                       ))
                     ],
