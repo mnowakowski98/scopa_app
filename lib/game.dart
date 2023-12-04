@@ -69,15 +69,28 @@ class _GamePageState extends State<GamePage> {
                     },
                     onCardDrop: (card) {
                       if (playerCards[currentPlayer]!.contains(card)) {
+                        RoundState roundState;
                         if (selectedTableCards.isEmpty) {
-                          currentRound.play(card);
+                          roundState = currentRound.play(card);
                         } else {
                           // TODO: Validate selected cards can capture
 
-                          currentRound.play(card, selectedTableCards);
+                          roundState =
+                              currentRound.play(card, selectedTableCards);
                         }
+
+                        switch (roundState) {
+                          case RoundState.next:
+                            break;
+                          case RoundState.scopa:
+                            break;
+                          case RoundState.ending:
+                            widget.game.scoreRound(currentRound);
+                            currentRound = widget.game.nextRound();
+                            break;
+                        }
+                        _resetGameState();
                       }
-                      _resetGameState();
                     },
                   ))
                 ],
