@@ -69,7 +69,13 @@ class _GamePageState extends State<GamePage> {
                     },
                     onCardDrop: (card) {
                       if (playerCards[currentPlayer]!.contains(card)) {
-                        currentRound.play(card);
+                        if (selectedTableCards.isEmpty) {
+                          currentRound.play(card);
+                        } else {
+                          // TODO: Validate selected cards can capture
+
+                          currentRound.play(card, selectedTableCards);
+                        }
                       }
                       _resetGameState();
                     },

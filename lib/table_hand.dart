@@ -32,7 +32,6 @@ class TableHand extends StatelessWidget {
                 for (final card in cards)
                   GameCard(
                     card: card,
-                    enableDragging: true,
                     isSelected: selectedCards.contains(card),
                     onTap: () {
                       if (onCardTap != null) {
