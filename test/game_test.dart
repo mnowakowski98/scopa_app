@@ -155,4 +155,26 @@ void main() {
 
     expect(gameCardInTableHand, findsNothing);
   });
+
+  testWidgets('Can select multiple table cards in the table hand',
+      (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(home: GamePage(game: Game([]))));
+
+    final tableHand = find.byType(TableHand);
+    final tableCard1 =
+        find.descendant(of: tableHand, matching: find.byType(GameCard)).first;
+    final tableCard1Widget = widgetTester.widget<Card>(
+        find.descendant(of: tableCard1, matching: find.byType(Card)));
+
+    final tableCard2 =
+        find.descendant(of: tableHand, matching: find.byType(GameCard)).last;
+    final tableCard2Widget = widgetTester.widget<Card>(
+        find.descendant(of: tableCard1, matching: find.byType(Card)));
+
+    await widgetTester.tap(tableCard1);
+    await widgetTester.tap(tableCard2);
+
+    expect(tableCard1Widget.color, equals(Colors.blue));
+    expect(tableCard2Widget.color, equals(Colors.blue));
+  });
 }
