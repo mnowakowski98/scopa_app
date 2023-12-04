@@ -180,4 +180,22 @@ void main() {
     expect(tableCard1Widget.color, equals(Colors.blue));
     expect(tableCard2Widget.color, equals(Colors.blue));
   });
+
+  testWidgets(
+      'Can capture table cards by playing a card with table cards selected',
+      (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(
+        home: GamePage(
+            game: Game([
+      Team.players([Player('Test 1'), Player('Test 2')])
+    ]))));
+
+    // TODO: Rig the deck somehow
+
+    // TODO: Select a table card
+
+    // TODO: Select drag a matching card from current player's hand to the table
+
+    // TODO: Check both cards are in the current player's fishes
+  });
 }
