@@ -26,6 +26,21 @@ void main() {
     expect(find.byType(GameCard), findsWidgets);
   });
 
+  testWidgets('Shows the score for each team', (widgetTester) async {
+    await widgetTester.pumpWidget(MaterialApp(
+      home: GamePage(
+          game: Game([
+        Team.players([Player('Test 1')], name: 'Team 1'),
+      ])),
+    ));
+
+    final teamName = find.text('Team 1');
+    final teamCard = find.ancestor(of: teamName, matching: find.byType(Card));
+
+    expect(find.descendant(of: teamCard, matching: find.text('0')),
+        findsOneWidget);
+  });
+
   testWidgets('Highlights the current player green', (widgetTester) async {
     await widgetTester.pumpWidget(MaterialApp(
         home: GamePage(

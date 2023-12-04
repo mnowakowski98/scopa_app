@@ -1,3 +1,6 @@
+## 0.3.0
+- Added display of game score
+
 ## 0.2.0
 
 - Added ability to play and fish cards
