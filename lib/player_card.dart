@@ -42,6 +42,7 @@ class PlayerCard extends StatelessWidget {
                         if (onHandCardTap != null) onHandCardTap!(card);
                       },
                       isSelected: selectedHandCard == card,
+                      enableDragging: isCurrent,
                     )
                 ],
               ),

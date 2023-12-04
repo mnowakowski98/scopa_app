@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_app/game_card.dart';
 import 'package:scopa_app/player_card.dart';
+import 'package:scopa_app/table_hand.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
@@ -16,6 +16,7 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   late ScopaRound currentRound;
   late List<tabletop_lib.Card> tableCards;
+  late List<tabletop_lib.Card> selectedTableCards;
   late Map<String, List<tabletop_lib.Card>> playerCards;
   late Map<String, List<tabletop_lib.Card>> playerFishes;
 
@@ -31,6 +32,13 @@ class _GamePageState extends State<GamePage> {
         .map((key, value) => MapEntry(key.name, value.cards)));
     currentPlayer = currentRound.currentPlayer?.name;
     selectedHandCard = null;
+    selectedTableCards = [];
+  }
+
+  void _resetGameState() {
+    setState(() {
+      _refreshGameState();
+    });
   }
 
   @override
@@ -47,38 +55,31 @@ class _GamePageState extends State<GamePage> {
         body: NestedScrollView(
             headerSliverBuilder: (context, q) => [
                   SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Wrap(
-                        children: [
-                          ElevatedButton(
-                              onPressed: () {
-                                if (playerCards[currentPlayer]!.isNotEmpty) {
-                                  currentRound
-                                      .play(playerCards[currentPlayer]!.first);
-                                }
+                      child: TableHand(
+                    cards: tableCards,
+                    selectedCards: selectedTableCards,
+                    onCardTap: (card) {
+                      setState(() {
+                        if (selectedTableCards.contains(card)) {
+                          selectedTableCards.remove(card);
+                        } else {
+                          selectedTableCards.add(card);
+                        }
+                      });
+                    },
+                    onCardDrop: (card) {
+                      if (playerCards[currentPlayer]!.contains(card)) {
+                        if (selectedTableCards.isEmpty) {
+                          currentRound.play(card);
+                        } else {
+                          // TODO: Validate selected cards can capture
 
-                                setState(() {
-                                  _refreshGameState();
-                                });
-                              },
-                              child: const Text('Test play'))
-                        ],
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          children: [
-                            for (final card in tableCards) GameCard(card: card)
-                          ],
-                        ),
-                      ),
-                    ),
-                  )
+                          currentRound.play(card, selectedTableCards);
+                        }
+                      }
+                      _resetGameState();
+                    },
+                  ))
                 ],
             body: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -113,9 +114,11 @@ class _GamePageState extends State<GamePage> {
                           isCurrent: currentPlayer == player.name,
                           selectedHandCard: selectedHandCard,
                           onHandCardTap: (card) {
-                            setState(() {
-                              selectedHandCard = card;
-                            });
+                            if (player.name == currentPlayer) {
+                              setState(() {
+                                selectedHandCard = card;
+                              });
+                            }
                           },
                         );
                       },
