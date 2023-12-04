@@ -16,6 +16,7 @@ class GamePage extends StatefulWidget {
 class _GamePageState extends State<GamePage> {
   late ScopaRound currentRound;
   late List<tabletop_lib.Card> tableCards;
+  late List<tabletop_lib.Card> selectedTableCards;
   late Map<String, List<tabletop_lib.Card>> playerCards;
   late Map<String, List<tabletop_lib.Card>> playerFishes;
 
@@ -31,6 +32,7 @@ class _GamePageState extends State<GamePage> {
         .map((key, value) => MapEntry(key.name, value.cards)));
     currentPlayer = currentRound.currentPlayer?.name;
     selectedHandCard = null;
+    selectedTableCards = [];
   }
 
   void _resetGameState() {
@@ -55,7 +57,17 @@ class _GamePageState extends State<GamePage> {
                   SliverToBoxAdapter(
                       child: TableHand(
                     cards: tableCards,
-                    onCardDrag: (card) {
+                    selectedCards: selectedTableCards,
+                    onCardTap: (card) {
+                      setState(() {
+                        if (selectedTableCards.contains(card)) {
+                          selectedTableCards.remove(card);
+                        } else {
+                          selectedTableCards.add(card);
+                        }
+                      });
+                    },
+                    onCardDrop: (card) {
                       if (playerCards[currentPlayer]!.contains(card)) {
                         currentRound.play(card);
                       }

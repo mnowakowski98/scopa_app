@@ -163,16 +163,19 @@ void main() {
     final tableHand = find.byType(TableHand);
     final tableCard1 =
         find.descendant(of: tableHand, matching: find.byType(GameCard)).first;
-    final tableCard1Widget = widgetTester.widget<Card>(
-        find.descendant(of: tableCard1, matching: find.byType(Card)));
-
     final tableCard2 =
         find.descendant(of: tableHand, matching: find.byType(GameCard)).last;
-    final tableCard2Widget = widgetTester.widget<Card>(
-        find.descendant(of: tableCard1, matching: find.byType(Card)));
 
     await widgetTester.tap(tableCard1);
+    await widgetTester.pump();
+
     await widgetTester.tap(tableCard2);
+    await widgetTester.pump();
+
+    final tableCard1Widget = widgetTester.widget<Card>(
+        find.descendant(of: tableCard1, matching: find.byType(Card)));
+    final tableCard2Widget = widgetTester.widget<Card>(
+        find.descendant(of: tableCard1, matching: find.byType(Card)));
 
     expect(tableCard1Widget.color, equals(Colors.blue));
     expect(tableCard2Widget.color, equals(Colors.blue));
