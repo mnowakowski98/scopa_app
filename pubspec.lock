@@ -120,7 +120,7 @@ packages:
     description:
       path: "."
       ref: GameScoring
-      resolved-ref: b53fe703cd6208dcc2c3cdcd7fc1e332f95d695d
+      resolved-ref: b1c8839c771520ffbd48a0e9379a474fdee79411
       url: "https://github.com/mnowakowski98/scopa_lib"
     source: git
     version: "0.5.0"
