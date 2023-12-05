@@ -17,8 +17,10 @@ class _GamePageState extends State<GamePage> {
   late ScopaRound currentRound;
   late List<tabletop_lib.Card> tableCards;
   late List<tabletop_lib.Card> selectedTableCards;
-  late Map<String, List<tabletop_lib.Card>> playerCards;
-  late Map<String, List<tabletop_lib.Card>> playerFishes;
+
+  final playerCards = <String, List<tabletop_lib.Card>>{};
+  final playerFishes = <String, List<tabletop_lib.Card>>{};
+  final playerScopas = <String, List<List<tabletop_lib.Card>>>{};
 
   tabletop_lib.Card? selectedHandCard;
 
@@ -26,10 +28,6 @@ class _GamePageState extends State<GamePage> {
 
   void _refreshGameState() {
     tableCards = List.unmodifiable(widget.game.table.round.cards);
-    playerCards = Map.unmodifiable(currentRound.playerHands
-        .map((key, value) => MapEntry(key.name, value.cards)));
-    playerFishes = Map.unmodifiable(currentRound.captureHands
-        .map((key, value) => MapEntry(key.name, value.cards)));
     currentPlayer = currentRound.currentPlayer?.name;
     selectedHandCard = null;
     selectedTableCards = [];
@@ -45,6 +43,12 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     currentRound = widget.game.nextRound();
+    for (final seat in widget.game.table.seats) {
+      final player = seat.player!;
+      playerCards[player.name] = currentRound.playerHands[player]!.cards;
+      playerFishes[player.name] = currentRound.captureHands[player]!.cards;
+      playerScopas[player.name] = [];
+    }
     _refreshGameState();
   }
 
@@ -53,6 +57,7 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
         appBar: AppBar(title: const Text('Game')),
         body: NestedScrollView(
+            floatHeaderSlivers: true,
             headerSliverBuilder: (context, q) => [
                   SliverToBoxAdapter(
                       child: TableHand(
@@ -69,11 +74,17 @@ class _GamePageState extends State<GamePage> {
                     },
                     onCardDrop: (card) {
                       if (playerCards[currentPlayer]!.contains(card)) {
+                        playerCards[currentPlayer]!.remove(card);
+
                         RoundState roundState;
                         if (selectedTableCards.isEmpty) {
                           roundState = currentRound.play(card);
                         } else {
                           // TODO: Validate selected cards can capture
+
+                          playerFishes[currentPlayer]!.add(card);
+                          playerFishes[currentPlayer]!
+                              .addAll(selectedTableCards);
 
                           roundState =
                               currentRound.play(card, selectedTableCards);
@@ -83,10 +94,19 @@ class _GamePageState extends State<GamePage> {
                           case RoundState.next:
                             break;
                           case RoundState.scopa:
+                            final scopaCards = <tabletop_lib.Card>[];
+                            scopaCards.add(card);
+                            scopaCards.addAll(selectedTableCards);
+                            playerScopas[currentPlayer]!.add(scopaCards);
                             break;
                           case RoundState.ending:
                             widget.game.scoreRound(currentRound);
                             currentRound = widget.game.nextRound();
+                            for (final seat in widget.game.table.seats) {
+                              final player = seat.player!;
+                              playerCards[player.name]!.addAll(
+                                  currentRound.playerHands[player]!.cards);
+                            }
                             break;
                         }
                         _resetGameState();
@@ -95,14 +115,14 @@ class _GamePageState extends State<GamePage> {
                   ))
                 ],
             body: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 500),
                 itemCount: widget.game.teams.length,
                 itemBuilder: ((context, index) {
                   final team = widget.game.teams[index];
                   return Card(
                       child: NestedScrollView(
-                    floatHeaderSlivers: true,
+                    floatHeaderSlivers: false,
                     headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverToBoxAdapter(
                           child: Padding(
