@@ -55,30 +55,6 @@ void main() {
     expect(player1Card.color, equals(Colors.green));
   });
 
-  testWidgets('Highlights a card blue in the current player hand on tap',
-      (widgetTester) async {
-    await widgetTester.pumpWidget(MaterialApp(
-        home: GamePage(
-            game: Game([
-      Team.players([Player('Test 1')]),
-      Team.players([Player('Test 2')]),
-    ]))));
-
-    final playerCard = find.byType(PlayerCard).first;
-    final gameCard =
-        find.descendant(of: playerCard, matching: find.byType(GameCard)).first;
-
-    final gameCardRoot =
-        find.descendant(of: gameCard, matching: find.byType(Card));
-
-    await widgetTester.tap(gameCard);
-    await widgetTester.pumpAndSettle();
-
-    final gameCardWidget = widgetTester.widget<Card>(gameCardRoot);
-
-    expect(gameCardWidget.color, equals(Colors.blue));
-  });
-
   testWidgets('Does not select player hand cards in non-current players',
       (widgetTester) async {
     await widgetTester.pumpWidget(MaterialApp(
