@@ -120,10 +120,10 @@ packages:
     description:
       path: "."
       ref: GameScoring
-      resolved-ref: b1c8839c771520ffbd48a0e9379a474fdee79411
+      resolved-ref: fb0fd54e9b80086da24706f01db5271a97d082a2
       url: "https://github.com/mnowakowski98/scopa_lib"
     source: git
-    version: "0.5.0"
+    version: "0.6.0"
   sky_engine:
     dependency: transitive
     description: flutter

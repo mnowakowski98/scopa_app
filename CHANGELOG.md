@@ -1,5 +1,8 @@
 ## 0.3.0
-- Added display of game score
+- Added display of game score.
+- Updated game screen layout to be less jank.
+- Removed ability to tap select player cards.
+- Fixed crashes related to invalid plays.
 
 ## 0.2.0
 

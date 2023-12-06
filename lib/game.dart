@@ -87,14 +87,14 @@ class _GamePageState extends State<GamePage> {
   }
 
   void _playCard(tabletop_lib.Card card, List<tabletop_lib.Card> matchCards) {
+    if (currentRound.validatePlay(card, matchCards) == false) return;
+
     playerCards[currentPlayer]!.remove(card);
 
     RoundState roundState;
     if (matchCards.isEmpty) {
       roundState = currentRound.play(card);
     } else {
-      // TODO: Validate selected cards can capture
-
       playerFishes[currentPlayer]!.add(card);
       playerFishes[currentPlayer]!.addAll(matchCards);
 
@@ -134,11 +134,7 @@ class _GamePageState extends State<GamePage> {
                 cards: tableCards,
                 selectedCards: selectedTableCards,
                 onCardTap: _selectTableCard,
-                onCardDrop: (card) {
-                  if (playerCards[currentPlayer]!.contains(card)) {
-                    _playCard(card, selectedTableCards);
-                  }
-                },
+                onCardDrop: (card) => _playCard(card, selectedTableCards),
               ),
             ),
             Expanded(
