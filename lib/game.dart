@@ -21,7 +21,7 @@ class _GamePageState extends State<GamePage> {
 
   final playerCards = <String, List<tabletop_lib.Card>>{};
   final playerFishes = <String, List<tabletop_lib.Card>>{};
-  final playerScopas = <String, List<List<tabletop_lib.Card>>>{};
+  final playerScopas = <String, int>{};
 
   tabletop_lib.Card? selectedHandCard;
 
@@ -39,7 +39,7 @@ class _GamePageState extends State<GamePage> {
             name: player.name,
             hand: playerCards[player.name]!,
             fishes: playerFishes[player.name]!,
-            scopas: playerScopas[player.name]!.length,
+            scopas: playerScopas[player.name]!,
             isCurrent: currentPlayer == player.name,
           )
       ]);
@@ -52,6 +52,14 @@ class _GamePageState extends State<GamePage> {
     currentPlayer = currentRound.currentPlayer?.name;
     selectedHandCard = null;
     selectedTableCards = [];
+
+    for (final seat in widget.game.table.seats) {
+      final player = seat.player!;
+      playerCards[player.name] = currentRound.playerHands[player]!.cards;
+      playerFishes[player.name] = currentRound.captureHands[player]!.cards;
+      playerScopas[player.name] = currentRound.scopas[player]!;
+    }
+
     _buildTeamsList(widget.game.teams, widget.game.teamScores);
   }
 
@@ -65,14 +73,6 @@ class _GamePageState extends State<GamePage> {
   void initState() {
     super.initState();
     currentRound = widget.game.nextRound();
-
-    for (final seat in widget.game.table.seats) {
-      final player = seat.player!;
-      playerCards[player.name] = currentRound.playerHands[player]!.cards;
-      playerFishes[player.name] = currentRound.captureHands[player]!.cards;
-      playerScopas[player.name] = [];
-    }
-
     _refreshGameState();
   }
 
@@ -89,15 +89,10 @@ class _GamePageState extends State<GamePage> {
   void _playCard(tabletop_lib.Card card, List<tabletop_lib.Card> matchCards) {
     if (currentRound.validatePlay(card, matchCards) == false) return;
 
-    playerCards[currentPlayer]!.remove(card);
-
     RoundState roundState;
     if (matchCards.isEmpty) {
       roundState = currentRound.play(card);
     } else {
-      playerFishes[currentPlayer]!.add(card);
-      playerFishes[currentPlayer]!.addAll(matchCards);
-
       roundState = currentRound.play(card, matchCards);
     }
 
@@ -105,10 +100,6 @@ class _GamePageState extends State<GamePage> {
       case RoundState.next:
         break;
       case RoundState.scopa:
-        final scopaCards = <tabletop_lib.Card>[];
-        scopaCards.add(card);
-        scopaCards.addAll(selectedTableCards);
-        playerScopas[currentPlayer]!.add(scopaCards);
         break;
       case RoundState.ending:
         widget.game.scoreRound(currentRound);
