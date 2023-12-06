@@ -89,27 +89,21 @@ class _GamePageState extends State<GamePage> {
   void _playCard(tabletop_lib.Card card, List<tabletop_lib.Card> matchCards) {
     if (currentRound.validatePlay(card, matchCards) == false) return;
 
-    RoundState roundState;
+    bool roundState;
     if (matchCards.isEmpty) {
       roundState = currentRound.play(card);
     } else {
       roundState = currentRound.play(card, matchCards);
     }
 
-    switch (roundState) {
-      case RoundState.next:
-        break;
-      case RoundState.scopa:
-        break;
-      case RoundState.ending:
-        widget.game.scoreRound(currentRound);
-        currentRound = widget.game.nextRound();
-        for (final seat in widget.game.table.seats) {
-          final player = seat.player!;
-          playerCards[player.name]!
-              .addAll(currentRound.playerHands[player]!.cards);
-        }
-        break;
+    if (roundState == false) {
+      widget.game.scoreRound(currentRound);
+      currentRound = widget.game.nextRound();
+      for (final seat in widget.game.table.seats) {
+        final player = seat.player!;
+        playerCards[player.name]!
+            .addAll(currentRound.playerHands[player]!.cards);
+      }
     }
     _resetGameState();
   }
