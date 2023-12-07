@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/player_card.dart';
 import 'package:scopa_app/table_hand.dart';
+import 'package:scopa_app/team_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
@@ -17,22 +18,49 @@ class _GamePageState extends State<GamePage> {
   late ScopaRound currentRound;
   late List<tabletop_lib.Card> tableCards;
   late List<tabletop_lib.Card> selectedTableCards;
-  late Map<String, List<tabletop_lib.Card>> playerCards;
-  late Map<String, List<tabletop_lib.Card>> playerFishes;
+
+  final playerCards = <String, List<tabletop_lib.Card>>{};
+  final playerFishes = <String, List<tabletop_lib.Card>>{};
+  final playerScopas = <String, int>{};
 
   tabletop_lib.Card? selectedHandCard;
 
   String? currentPlayer;
+  final teamsList = <Widget>[];
+
+  List<Widget> _buildTeamsList(
+      List<tabletop_lib.Team> teams, Map<tabletop_lib.Team, int> teamScores) {
+    teamsList.clear();
+    for (final team in teams) {
+      teamsList.add(TeamCard(team: team, score: teamScores[team]!));
+      teamsList.addAll([
+        for (final player in team.players)
+          PlayerCard(
+            name: player.name,
+            hand: playerCards[player.name]!,
+            fishes: playerFishes[player.name]!,
+            scopas: playerScopas[player.name]!,
+            isCurrent: currentPlayer == player.name,
+          )
+      ]);
+    }
+    return teamsList;
+  }
 
   void _refreshGameState() {
     tableCards = List.unmodifiable(widget.game.table.round.cards);
-    playerCards = Map.unmodifiable(currentRound.playerHands
-        .map((key, value) => MapEntry(key.name, value.cards)));
-    playerFishes = Map.unmodifiable(currentRound.captureHands
-        .map((key, value) => MapEntry(key.name, value.cards)));
     currentPlayer = currentRound.currentPlayer?.name;
     selectedHandCard = null;
     selectedTableCards = [];
+
+    for (final seat in widget.game.table.seats) {
+      final player = seat.player!;
+      playerCards[player.name] = currentRound.playerHands[player]!.cards;
+      playerFishes[player.name] = currentRound.captureHands[player]!.cards;
+      playerScopas[player.name] = currentRound.scopas[player]!;
+    }
+
+    _buildTeamsList(widget.game.teams, widget.game.teamScores);
   }
 
   void _resetGameState() {
@@ -48,82 +76,60 @@ class _GamePageState extends State<GamePage> {
     _refreshGameState();
   }
 
+  void _selectTableCard(tabletop_lib.Card card) {
+    setState(() {
+      if (selectedTableCards.contains(card)) {
+        selectedTableCards.remove(card);
+      } else {
+        selectedTableCards.add(card);
+      }
+    });
+  }
+
+  void _playCard(tabletop_lib.Card card, List<tabletop_lib.Card> matchCards) {
+    if (currentRound.validatePlay(card, matchCards) == false) return;
+
+    bool roundState;
+    if (matchCards.isEmpty) {
+      roundState = currentRound.play(card);
+    } else {
+      roundState = currentRound.play(card, matchCards);
+    }
+
+    if (roundState == false) {
+      widget.game.scoreRound(currentRound);
+      currentRound = widget.game.nextRound();
+      for (final seat in widget.game.table.seats) {
+        final player = seat.player!;
+        playerCards[player.name]!
+            .addAll(currentRound.playerHands[player]!.cards);
+      }
+    }
+    _resetGameState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(title: const Text('Game')),
-        body: NestedScrollView(
-            headerSliverBuilder: (context, q) => [
-                  SliverToBoxAdapter(
-                      child: TableHand(
-                    cards: tableCards,
-                    selectedCards: selectedTableCards,
-                    onCardTap: (card) {
-                      setState(() {
-                        if (selectedTableCards.contains(card)) {
-                          selectedTableCards.remove(card);
-                        } else {
-                          selectedTableCards.add(card);
-                        }
-                      });
-                    },
-                    onCardDrop: (card) {
-                      if (playerCards[currentPlayer]!.contains(card)) {
-                        if (selectedTableCards.isEmpty) {
-                          currentRound.play(card);
-                        } else {
-                          // TODO: Validate selected cards can capture
-
-                          currentRound.play(card, selectedTableCards);
-                        }
-                      }
-                      _resetGameState();
-                    },
-                  ))
-                ],
-            body: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
-                itemCount: widget.game.teams.length,
-                itemBuilder: ((context, index) {
-                  final team = widget.game.teams[index];
-                  return Card(
-                      child: NestedScrollView(
-                    floatHeaderSlivers: true,
-                    headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                      SliverToBoxAdapter(
-                          child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(children: [
-                          Text(
-                            team.name,
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const Text('[team.score]'),
-                        ]),
-                      ))
-                    ],
-                    body: ListView.builder(
-                      itemCount: team.players.length,
-                      itemBuilder: (context, index) {
-                        final player = team.players[index];
-                        return PlayerCard(
-                          name: player.name,
-                          hand: playerCards[player.name]!,
-                          fishes: playerFishes[player.name]!,
-                          isCurrent: currentPlayer == player.name,
-                          selectedHandCard: selectedHandCard,
-                          onHandCardTap: (card) {
-                            if (player.name == currentPlayer) {
-                              setState(() {
-                                selectedHandCard = card;
-                              });
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  ));
-                }))));
+        body: Column(
+          children: [
+            Expanded(
+              child: TableHand(
+                cards: tableCards,
+                selectedCards: selectedTableCards,
+                onCardTap: _selectTableCard,
+                onCardDrop: (card) => _playCard(card, selectedTableCards),
+              ),
+            ),
+            Expanded(
+              flex: 5,
+              child: ListView.builder(
+                itemCount: teamsList.length,
+                itemBuilder: (context, index) => teamsList[index],
+              ),
+            ),
+          ],
+        ));
   }
 }

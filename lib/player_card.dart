@@ -10,7 +10,8 @@ class PlayerCard extends StatelessWidget {
       required this.fishes,
       this.isCurrent = false,
       this.onHandCardTap,
-      this.selectedHandCard});
+      this.selectedHandCard,
+      this.scopas = 0});
 
   final bool isCurrent;
   final String name;
@@ -18,6 +19,7 @@ class PlayerCard extends StatelessWidget {
   final List<tabletop_lib.Card> fishes;
   final tabletop_lib.Card? selectedHandCard;
   final void Function(tabletop_lib.Card card)? onHandCardTap;
+  final int scopas;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class PlayerCard extends StatelessWidget {
             name,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+          Text(scopas.toString()),
           if (hand.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(8.0),
