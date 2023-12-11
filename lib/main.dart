@@ -38,15 +38,13 @@ class HomePage extends StatelessWidget {
                         builder: (context) => GamePage(
                               game: Game([
                                 Team.players([
-                                  Player('1-1'),
-                                  Player('1-2'),
-                                  Player('1-3'),
-                                ], name: 'Team 1'),
+                                  Player('Dirty Dan'),
+                                  Player('General Kenobi'),
+                                ], name: 'Herpus McDerpus'),
                                 Team.players([
-                                  Player('2-1'),
-                                  Player('2-2'),
-                                  Player('2-3'),
-                                ], name: 'Team 2'),
+                                  Player('Pinhead Larry'),
+                                  Player('Bananakin'),
+                                ], name: 'Derpus McHerpus'),
                               ]),
                             )));
               },
