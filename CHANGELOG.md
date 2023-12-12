@@ -1,4 +1,9 @@
+## 0.3.1
+
+- Added a game ending screen
+
 ## 0.3.0
+
 - Added display of game score.
 - Updated game screen layout to be less jank.
 - Removed ability to tap select player cards.

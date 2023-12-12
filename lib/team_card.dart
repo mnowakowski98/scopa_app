@@ -13,13 +13,16 @@ class TeamCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(children: [
-        Text(
-          team.name,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(score.toString()),
-      ]),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(children: [
+          Text(
+            team.name,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(score.toString()),
+        ]),
+      ),
     );
   }
 }
