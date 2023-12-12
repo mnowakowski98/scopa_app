@@ -3,9 +3,11 @@ import 'package:scopa_app/game.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart';
 
+// coverage:ignore-start
 void main() {
   runApp(const ScopaApp());
 }
+// coverage:ignore-end
 
 class ScopaApp extends StatelessWidget {
   const ScopaApp({super.key});

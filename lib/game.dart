@@ -98,6 +98,7 @@ class _GamePageState extends State<GamePage> {
       roundState = currentRound.play(card, matchCards);
     }
 
+    // TODO: Find a way to rig deck to test this half of the function.
     if (roundState == false) {
       final winners = widget.game.scoreRound(currentRound);
       if (winners != null && winners.isNotEmpty) {
