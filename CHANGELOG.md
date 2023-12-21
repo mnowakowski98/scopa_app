@@ -1,3 +1,7 @@
+## 0.4.0
+
+- Added player registration for new games
+
 ## 0.3.1
 
 - Added a game ending screen
