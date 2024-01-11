@@ -11,18 +11,19 @@ class GameSetup extends StatefulWidget {
 }
 
 class _GameSetupState extends State<GameSetup> {
-  final _unassigned = <Player>[];
+  final _unassignedPlayers = <Player>[];
+
   final _teams = <Team>[];
 
   void addPlayer(Player player) {
     setState(() {
-      _unassigned.add(player);
+      _unassignedPlayers.add(player);
     });
   }
 
   void assignPlayer(Player player, Team team) {
     setState(() {
-      _unassigned.remove(player);
+      _unassignedPlayers.remove(player);
       for (var element in _teams) {
         element.players.remove(player);
       }
@@ -32,6 +33,9 @@ class _GameSetupState extends State<GameSetup> {
 
   @override
   Widget build(BuildContext context) {
+    final unassignedTeam =
+        Team.players(_unassignedPlayers, name: '(Unassigned)');
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Game Setup'),
@@ -42,7 +46,7 @@ class _GameSetupState extends State<GameSetup> {
         ),
         Expanded(
           child: UnassignedTeamList(
-            players: _unassigned,
+            team: unassignedTeam,
           ),
         )
       ]),

@@ -10,10 +10,10 @@ void main() {
 
     await widgetTester.pumpWidget(MaterialApp(
       home: UnassignedTeamList(
-        players: [
+        team: Team.players([
           Player(player1Name),
           Player(player2Name),
-        ],
+        ]),
       ),
     ));
 
