@@ -40,8 +40,10 @@ class _GameSetupState extends State<GameSetup> {
         PlayerEntryForm(
           onAdd: addPlayer,
         ),
-        UnassignedTeamList(
-          players: _unassigned,
+        Expanded(
+          child: UnassignedTeamList(
+            players: _unassigned,
+          ),
         )
       ]),
     );

@@ -8,18 +8,16 @@ class TeamList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          Text(team.name),
-          Expanded(
-            child: ListView.builder(
-              itemCount: team.players.length,
-              itemBuilder: (context, index) => Text(team.players[index].name),
-            ),
-          )
-        ],
-      ),
+    return Column(
+      children: [
+        Text(team.name),
+        Expanded(
+          child: ListView.builder(
+            itemCount: team.players.length,
+            itemBuilder: (context, index) => Text(team.players[index].name),
+          ),
+        )
+      ],
     );
   }
 }
