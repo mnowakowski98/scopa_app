@@ -43,10 +43,14 @@ class _GameSetupState extends State<GameSetup> {
       body: Column(children: [
         PlayerEntryForm(
           onAdd: addPlayer,
+          teams: [unassignedTeam] + _teams,
         ),
         Expanded(
-          child: UnassignedTeamList(
-            team: unassignedTeam,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: UnassignedTeamList(
+              team: unassignedTeam,
+            ),
           ),
         )
       ]),

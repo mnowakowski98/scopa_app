@@ -4,7 +4,7 @@ import 'package:scopa_app/teams_list_dropdown.dart';
 import 'package:scopa_lib/tabletop_lib.dart';
 
 void main() {
-  testWidgets('displays a list of team names on tap', (widgetTester) async {
+  testWidgets('displays a list of team names', (widgetTester) async {
     const team1Name = 'Test team 1';
     const team2Name = 'Test team 2';
 
