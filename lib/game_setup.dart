@@ -1,17 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:scopa_app/player_entry_form.dart';
+import 'package:scopa_app/unassigned_team_list.dart';
 import 'package:scopa_lib/tabletop_lib.dart';
 
 class GameSetup extends StatefulWidget {
-  const GameSetup({super.key, this.onStart});
-
-  final void Function(List<Team> teams)? onStart;
+  const GameSetup({super.key});
 
   @override
   State<GameSetup> createState() => _GameSetupState();
 }
 
 class _GameSetupState extends State<GameSetup> {
-  List<Team> teams = [];
+  final _unassigned = <Player>[];
+  final _teams = <Team>[];
+
+  void addPlayer(Player player) {
+    setState(() {
+      _unassigned.add(player);
+    });
+  }
+
+  void assignPlayer(Player player, Team team) {
+    setState(() {
+      _unassigned.remove(player);
+      for (var element in _teams) {
+        element.players.remove(player);
+      }
+      _teams.singleWhere((element) => element == team).players.add(player);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,28 +37,11 @@ class _GameSetupState extends State<GameSetup> {
         title: const Text('Game Setup'),
       ),
       body: Column(children: [
-        Expanded(
-          flex: 5,
-          child: ListView(
-            children: [
-              Text('(Unassigned)'),
-              Placeholder(
-                child: Text('Test player'),
-              )
-            ],
-          ),
+        PlayerEntryForm(
+          onAdd: addPlayer,
         ),
-        Expanded(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Padding(padding: EdgeInsets.all(8.0), child: Placeholder()),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Placeholder(),
-              )
-            ],
-          ),
+        UnassignedTeamList(
+          players: _unassigned,
         )
       ]),
     );

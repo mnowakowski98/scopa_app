@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_app/game.dart';
-import 'package:scopa_lib/scopa_lib.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
+import 'package:scopa_app/game_setup.dart';
 
 // coverage:ignore-start
 void main() {
@@ -17,7 +15,7 @@ class ScopaApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scopa App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
       home: const SafeArea(child: HomePage()),
@@ -34,21 +32,8 @@ class HomePage extends StatelessWidget {
       body: Center(
           child: ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => GamePage(
-                              game: Game([
-                                Team.players([
-                                  Player('Dirty Dan'),
-                                  Player('General Kenobi'),
-                                ], name: 'Herpus McDerpus'),
-                                Team.players([
-                                  Player('Pinhead Larry'),
-                                  Player('Bananakin'),
-                                ], name: 'Derpus McHerpus'),
-                              ]),
-                            )));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const GameSetup()));
               },
               child: const Text('Start Game'))),
     );
