@@ -39,8 +39,10 @@ class _PlayerEntryFormState extends State<PlayerEntryForm> {
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate() &&
-                        widget.onAdd != null) {
+                    if (_formKey.currentState!.validate() == false) return;
+                    _textController.clear();
+
+                    if (widget.onAdd != null) {
                       widget.onAdd!(Player(_textController.text));
                     }
                   },
