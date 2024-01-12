@@ -8,16 +8,20 @@ class TeamList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(team.name),
-        Expanded(
-          child: ListView.builder(
-            itemCount: team.players.length,
-            itemBuilder: (context, index) => Text(team.players[index].name),
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) => [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [Text(team.name), const Divider()],
           ),
-        )
+        ),
       ],
+      body: team.players.isNotEmpty
+          ? ListView.builder(
+              itemCount: team.players.length,
+              itemBuilder: (context, index) => Text(team.players[index].name),
+            )
+          : const Center(child: Text('No players')),
     );
   }
 }

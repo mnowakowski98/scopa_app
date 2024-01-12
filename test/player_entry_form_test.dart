@@ -11,7 +11,7 @@ void main() {
     await widgetTester.pumpWidget(MaterialApp(
         home: Scaffold(
       body: PlayerEntryForm(
-        onAdd: (player) => onAdd(),
+        onAdd: (player, team) => onAdd(),
       ),
     )));
 
