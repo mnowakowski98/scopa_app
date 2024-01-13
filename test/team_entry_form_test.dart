@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scopa_app/team_entry_form.dart';
+import 'package:scopa_app/game_setup/team_entry_form.dart';
 
 void main() {
   testWidgets('calls onAdd when a team is added', (widgetTester) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game.dart';
-import 'package:scopa_app/teams_list.dart';
+import 'package:scopa_app/game_setup/teams_list.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart';
 

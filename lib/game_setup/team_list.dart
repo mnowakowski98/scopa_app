@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_app/player_entry_form.dart';
+import 'package:scopa_app/game_setup/player_entry_form.dart';
 
 class TeamList extends StatelessWidget {
   const TeamList(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scopa_app/player_entry_form.dart';
+import 'package:scopa_app/game_setup/player_entry_form.dart';
 
 void main() {
   testWidgets('calls onAdd when a player is added', (widgetTester) async {

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_app/game_setup.dart';
+import 'package:scopa_app/game_setup/game_setup.dart';
 
 // coverage:ignore-start
 void main() {
