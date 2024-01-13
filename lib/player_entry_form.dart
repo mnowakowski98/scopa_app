@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 class PlayerEntryForm extends StatefulWidget {
   const PlayerEntryForm({

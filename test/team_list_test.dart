@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scopa_app/team_list.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 void main() {
   testWidgets('Shows a list of players', (widgetTester) async {
     const player1Name = 'Test player 1';
     const player2Name = 'Test player 2';
 
-    await widgetTester.pumpWidget(MaterialApp(
+    await widgetTester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: TeamList(
-          team: Team.players([
-            Player(player1Name),
-            Player(player2Name),
-          ]),
+          teamName: 'Test',
+          playerNames: [player1Name, player2Name],
         ),
       ),
     ));
