@@ -9,11 +9,13 @@ void main() {
     const player2Name = 'Test player 2';
 
     await widgetTester.pumpWidget(MaterialApp(
-      home: TeamList(
-        team: Team.players([
-          Player(player1Name),
-          Player(player2Name),
-        ]),
+      home: Scaffold(
+        body: TeamList(
+          team: Team.players([
+            Player(player1Name),
+            Player(player2Name),
+          ]),
+        ),
       ),
     ));
 

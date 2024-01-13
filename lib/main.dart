@@ -18,7 +18,7 @@ class ScopaApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const SafeArea(child: HomePage()),
+      home: const HomePage(),
     );
   }
 }

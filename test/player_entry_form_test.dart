@@ -11,6 +11,7 @@ void main() {
     await widgetTester.pumpWidget(MaterialApp(
         home: Scaffold(
       body: PlayerEntryForm(
+        team: Team.players([]),
         onAdd: (player, team) => onAdd(),
       ),
     )));
@@ -25,28 +26,5 @@ void main() {
     await widgetTester.pump();
 
     expect(callbackwasCalled, isTrue);
-  });
-
-  testWidgets('displays a list of teams to add the player to',
-      (widgetTester) async {
-    const team1Name = 'Test team 1';
-    const team2Name = 'Test team 2';
-
-    await widgetTester.pumpWidget(MaterialApp(
-        home: Scaffold(
-      body: PlayerEntryForm(
-        teams: [
-          Team.players([], name: '(Unassigned)'),
-          Team.players([], name: team1Name),
-          Team.players([], name: team2Name),
-        ],
-      ),
-    )));
-
-    final team1 = find.text(team1Name);
-    final team2 = find.text(team2Name);
-
-    expect(team1, findsOneWidget);
-    expect(team2, findsOneWidget);
   });
 }

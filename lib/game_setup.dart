@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game.dart';
-import 'package:scopa_app/player_entry_form.dart';
 import 'package:scopa_app/team_entry_form.dart';
 import 'package:scopa_app/teams_list.dart';
 import 'package:scopa_lib/scopa_lib.dart';
@@ -52,14 +51,13 @@ class _GameSetupState extends State<GameSetup> {
   Widget build(BuildContext context) {
     final unassignedTeam =
         Team.players(_unassignedPlayers, name: '(Unassigned)');
-    return Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              const Expanded(child: Text('Game Setup')),
-              Expanded(
-                flex: 3,
-                child: ElevatedButton(
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Row(
+              children: [
+                const Expanded(child: Text('Game Setup')),
+                ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => GamePage(
@@ -71,30 +69,13 @@ class _GameSetupState extends State<GameSetup> {
                       ));
                     },
                     child: const Text('Start')),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              TeamEntryForm(
-                onAdd: addTeam,
-              ),
-              const Divider(),
-              PlayerEntryForm(
-                onAdd: addPlayer,
-                teams: [unassignedTeam] + _teams,
-              ),
-              const Divider(),
-              Expanded(
-                child: TeamsList(
-                  teams: [unassignedTeam] + _teams,
-                ),
-              )
-            ],
-          ),
-        ));
+          body: TeamsList(
+              onTeamAdd: addTeam,
+              onPlayerAdd: addPlayer,
+              teams: [unassignedTeam] + _teams)),
+    );
   }
 }
