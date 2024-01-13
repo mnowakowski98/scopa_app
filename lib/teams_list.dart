@@ -41,7 +41,8 @@ class TeamsList extends StatelessWidget {
                     itemCount: teams.length,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TeamList(team: teams[index]),
+                      child: TeamList(
+                          onPlayerAdd: onPlayerAdd, team: teams[index]),
                     ),
                   )
               ],

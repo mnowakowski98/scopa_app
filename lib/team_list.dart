@@ -22,6 +22,7 @@ class TeamList extends StatelessWidget {
           ),
         PlayerEntryForm(
           onAdd: onPlayerAdd,
+          team: team,
         ),
       ],
     );
