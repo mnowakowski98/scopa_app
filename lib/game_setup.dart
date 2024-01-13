@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game.dart';
-import 'package:scopa_app/team_entry_form.dart';
 import 'package:scopa_app/teams_list.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart';
@@ -13,44 +12,32 @@ class GameSetup extends StatefulWidget {
 }
 
 class _GameSetupState extends State<GameSetup> {
-  final _unassignedPlayers = <Player>[];
+  final _unassignedPlayers = <String>[];
 
-  final _teams = <Team>[];
+  final _teams = <String, List<String>>{};
 
-  void addPlayer(Player player, Team team) {
-    if (_teams.contains(team) == false) {
+  void addPlayer(String playerName, String teamName) {
+    if (_teams.keys.contains(teamName) == false) {
       setState(() {
-        _unassignedPlayers.add(player);
+        _unassignedPlayers.add(playerName);
       });
     } else {
-      final newPlayers = team.players + [player];
       setState(() {
-        _teams[_teams.indexOf(team)] =
-            Team.players(newPlayers, name: team.name);
+        _teams[teamName]!.add(playerName);
       });
     }
   }
 
-  void addTeam(Team team) {
+  void addTeam(String teamName) {
     setState(() {
-      _teams.add(team);
-    });
-  }
-
-  void assignPlayer(Player player, Team team) {
-    setState(() {
-      _unassignedPlayers.remove(player);
-      for (var element in _teams) {
-        element.players.remove(player);
-      }
-      _teams.singleWhere((element) => element == team).players.add(player);
+      _teams[teamName] = [];
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final unassignedTeam =
-        Team.players(_unassignedPlayers, name: '(Unassigned)');
+    final combinedTeams = Map.of({'(Unassigned)': _unassignedPlayers});
+    combinedTeams.addAll(_teams);
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
@@ -63,19 +50,26 @@ class _GameSetupState extends State<GameSetup> {
                         builder: (context) => GamePage(
                             game: Game([
                                   for (final player in _unassignedPlayers)
-                                    Team.players([player]),
+                                    Team.players([Player(player)]),
                                 ] +
-                                _teams)),
+                                _teams.entries
+                                    .map((team) => Team.players(team.value
+                                        .map((player) => Player(player))
+                                        .toList()))
+                                    .toList())),
                       ));
                     },
                     child: const Text('Start')),
               ],
             ),
           ),
-          body: TeamsList(
-              onTeamAdd: addTeam,
-              onPlayerAdd: addPlayer,
-              teams: [unassignedTeam] + _teams)),
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TeamsList(
+                onTeamAdd: addTeam,
+                onPlayerAdd: addPlayer,
+                teams: combinedTeams),
+          )),
     );
   }
 }
