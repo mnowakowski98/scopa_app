@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scopa_app/teams_list.dart';
+import 'package:scopa_app/game_setup/teams_list.dart';
 
 void main() {
   testWidgets('displays a list of team names', (widgetTester) async {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:scopa_app/team_list.dart';
+import 'package:scopa_app/game_setup/team_list.dart';
 
 void main() {
   testWidgets('Shows a list of players', (widgetTester) async {
