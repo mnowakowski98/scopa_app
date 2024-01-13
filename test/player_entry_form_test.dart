@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scopa_app/player_entry_form.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 void main() {
   testWidgets('calls onAdd when a player is added', (widgetTester) async {
@@ -11,7 +10,7 @@ void main() {
     await widgetTester.pumpWidget(MaterialApp(
         home: Scaffold(
       body: PlayerEntryForm(
-        team: Team.players([]),
+        teamName: 'Test',
         onAdd: (player, team) => onAdd(),
       ),
     )));
