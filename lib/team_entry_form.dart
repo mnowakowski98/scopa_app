@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 class TeamEntryForm extends StatefulWidget {
   const TeamEntryForm({super.key, this.onAdd});
 
-  final void Function(Team team)? onAdd;
+  final void Function(String teamName)? onAdd;
 
   @override
   State<TeamEntryForm> createState() => _TeamEntryFormState();
@@ -39,7 +38,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                     final text = _textController.text;
                     _textController.clear();
                     if (widget.onAdd != null) {
-                      widget.onAdd!(Team.players([], name: text));
+                      widget.onAdd!(text);
                     }
                   },
                   child: const Text('Add')),

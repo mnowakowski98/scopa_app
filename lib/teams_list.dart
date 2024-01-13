@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/team_entry_form.dart';
 import 'package:scopa_app/team_list.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 class TeamsList extends StatelessWidget {
   const TeamsList(
       {super.key, required this.teams, this.onPlayerAdd, this.onTeamAdd});
 
-  final List<Team> teams;
-  final void Function(Player player, Team team)? onPlayerAdd;
-  final void Function(Team team)? onTeamAdd;
+  final Map<String, List<String>> teams;
+  final void Function(String playerName, String teamName)? onPlayerAdd;
+  final void Function(String teamName)? onTeamAdd;
 
   @override
   Widget build(BuildContext context) {
+    Widget teamList(String teamName) => TeamList(
+        playerNames: teams[teamName]!,
+        onPlayerAdd: onPlayerAdd,
+        teamName: teamName);
+
     return LayoutBuilder(
         builder: (context, constraints) => CustomScrollView(
               shrinkWrap: true,
@@ -26,14 +30,12 @@ class TeamsList extends StatelessWidget {
                 ),
                 if (constraints.maxWidth <= 750)
                   SliverList.builder(
-                      itemCount: teams.length,
-                      itemBuilder: (context, index) => Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TeamList(
-                              onPlayerAdd: onPlayerAdd,
-                              team: teams[index],
-                            ),
-                          ))
+                    itemCount: teams.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: teamList(teams.keys.elementAt(index)),
+                    ),
+                  )
                 else
                   SliverGrid.builder(
                     gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -41,8 +43,7 @@ class TeamsList extends StatelessWidget {
                     itemCount: teams.length,
                     itemBuilder: (context, index) => Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: TeamList(
-                          onPlayerAdd: onPlayerAdd, team: teams[index]),
+                      child: teamList(teams.keys.elementAt(index)),
                     ),
                   )
               ],
