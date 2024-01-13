@@ -34,7 +34,9 @@ class _GamePageState extends State<GamePage> {
       List<tabletop_lib.Team> teams, Map<tabletop_lib.Team, int> teamScores) {
     teamsList.clear();
     for (final team in teams) {
-      teamsList.add(TeamCard(team: team, score: teamScores[team]!));
+      if (team.name.isNotEmpty || team.players.length > 1) {
+        teamsList.add(TeamCard(team: team, score: teamScores[team]!));
+      }
       teamsList.addAll([
         for (final player in team.players)
           PlayerCard(
