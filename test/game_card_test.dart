@@ -5,8 +5,10 @@ import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 void main() {
   testWidgets('Shows the card suite and value', (widgetTester) async {
-    await widgetTester.pumpWidget(
-        const MaterialApp(home: GameCard(card: tabletop_lib.Card('Test', 1))));
+    await widgetTester.pumpWidget(const MaterialApp(
+        home: GameCard(
+      cardFace: CardFace(suite: 'Test', value: '1'),
+    )));
 
     expect(find.text('1\nTest'), findsOneWidget);
   });
@@ -15,7 +17,7 @@ void main() {
     var callbackWasCalled = false;
     await widgetTester.pumpWidget(MaterialApp(
         home: GameCard(
-      card: const tabletop_lib.Card('Test', 1),
+      cardFace: const CardFace(suite: 'Test', value: '1'),
       onTap: () {
         callbackWasCalled = true;
       },
@@ -29,7 +31,7 @@ void main() {
   testWidgets('Is highlighted blue when selected', (widgetTester) async {
     await widgetTester.pumpWidget(const MaterialApp(
         home: GameCard(
-      card: tabletop_lib.Card('Test', 1),
+      cardFace: CardFace(suite: 'Test', value: '1'),
       isSelected: true,
     )));
 

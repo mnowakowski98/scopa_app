@@ -40,7 +40,8 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   for (final card in hand)
                     GameCard(
-                      card: card,
+                      cardFace: CardFace(
+                          suite: card.suite, value: card.value.toString()),
                       onTap: () {
                         if (onHandCardTap != null) onHandCardTap!(card);
                       },
@@ -62,7 +63,8 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   for (final card in fishes)
                     GameCard(
-                      card: card,
+                      cardFace: CardFace(
+                          suite: card.suite, value: card.value.toString()),
                     )
                 ],
               ),
