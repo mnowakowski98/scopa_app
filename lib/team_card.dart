@@ -3,9 +3,12 @@ import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 class TeamCard extends StatelessWidget {
   const TeamCard(
-      {super.key, required this.team, required this.score, this.onHandCardTap});
+      {super.key,
+      required this.score,
+      this.onHandCardTap,
+      required this.teamName});
 
-  final tabletop_lib.Team team;
+  final String teamName;
   final int score;
 
   final void Function(tabletop_lib.Card)? onHandCardTap;
@@ -17,7 +20,7 @@ class TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Column(children: [
           Text(
-            team.name,
+            teamName,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           Text(score.toString()),

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/team_card.dart';
-import 'package:scopa_lib/tabletop_lib.dart';
 
 class WinnerCard extends StatelessWidget {
   const WinnerCard({super.key, required this.teamScores});
 
-  final Map<Team, int> teamScores;
+  final Map<String, int> teamScores;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class WinnerCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   for (final team in teamScores.entries)
-                    TeamCard(team: team.key, score: team.value)
+                    TeamCard(teamName: team.key, score: team.value)
                 ],
               ),
             ),
