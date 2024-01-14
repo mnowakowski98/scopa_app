@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game_card.dart';
-import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 class TableHand extends StatelessWidget {
   const TableHand(
@@ -10,14 +9,14 @@ class TableHand extends StatelessWidget {
       required this.selectedCards,
       this.onCardTap});
 
-  final List<tabletop_lib.Card> cards;
-  final List<tabletop_lib.Card> selectedCards;
-  final void Function(tabletop_lib.Card card)? onCardDrop;
-  final void Function(tabletop_lib.Card card)? onCardTap;
+  final List<(String, String)> cards;
+  final List<(String, String)> selectedCards;
+  final void Function((String, String) card)? onCardDrop;
+  final void Function((String, String) card)? onCardTap;
 
   @override
   Widget build(BuildContext context) {
-    return DragTarget<tabletop_lib.Card>(
+    return DragTarget<(String, String)>(
       onAccept: (card) {
         if (onCardDrop != null) {
           onCardDrop!(card);
@@ -31,8 +30,8 @@ class TableHand extends StatelessWidget {
               children: [
                 for (final card in cards)
                   GameCard(
-                    cardFace: CardFace(
-                        suite: card.suite, value: card.value.toString()),
+                    suite: card.$1,
+                    value: card.$2,
                     isSelected: selectedCards.contains(card),
                     onTap: () {
                       if (onCardTap != null) {

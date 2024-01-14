@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:scopa_app/player_card.dart';
-import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 void main() {
   testWidgets('Shows the player name', (widgetTester) async {
@@ -13,8 +12,7 @@ void main() {
 
   testWidgets('Shows the player hand', (widgetTester) async {
     await widgetTester.pumpWidget(const MaterialApp(
-        home: PlayerCard(
-            name: '', hand: [tabletop_lib.Card('TestSuite', 1)], fishes: [])));
+        home: PlayerCard(name: '', hand: [('TestSuite', '1')], fishes: [])));
 
     expect(find.textContaining('TestSuite'), findsOneWidget);
     expect(find.textContaining('1'), findsOneWidget);
@@ -22,8 +20,7 @@ void main() {
 
   testWidgets('Shows the player fishes', (widgetTester) async {
     await widgetTester.pumpWidget(const MaterialApp(
-        home: PlayerCard(
-            name: '', hand: [], fishes: [tabletop_lib.Card('TestSuite', 1)])));
+        home: PlayerCard(name: '', hand: [], fishes: [('TestSuite', '1')])));
 
     expect(find.textContaining('TestSuite'), findsOneWidget);
     expect(find.textContaining('1'), findsOneWidget);
@@ -44,12 +41,12 @@ void main() {
 
   testWidgets('Calls onHandCardTap when a hand card is tapped',
       (widgetTester) async {
-    tabletop_lib.Card? callbackCard;
+    (String, String)? callbackCard;
 
     await widgetTester.pumpWidget(MaterialApp(
         home: PlayerCard(
             name: 'Test',
-            hand: const [tabletop_lib.Card('TestSuite', 5)],
+            hand: const [('TestSuite', '5')],
             fishes: const [],
             onHandCardTap: (card) {
               callbackCard = card;

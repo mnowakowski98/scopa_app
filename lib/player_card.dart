@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:scopa_app/game_card.dart';
-import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
 
 class PlayerCard extends StatelessWidget {
   const PlayerCard(
@@ -15,10 +14,10 @@ class PlayerCard extends StatelessWidget {
 
   final bool isCurrent;
   final String name;
-  final List<tabletop_lib.Card> hand;
-  final List<tabletop_lib.Card> fishes;
-  final tabletop_lib.Card? selectedHandCard;
-  final void Function(tabletop_lib.Card card)? onHandCardTap;
+  final List<(String, String)> hand;
+  final List<(String, String)> fishes;
+  final (String, String)? selectedHandCard;
+  final void Function((String, String) card)? onHandCardTap;
   final int scopas;
 
   @override
@@ -40,8 +39,8 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   for (final card in hand)
                     GameCard(
-                      cardFace: CardFace(
-                          suite: card.suite, value: card.value.toString()),
+                      suite: card.$1,
+                      value: card.$2,
                       onTap: () {
                         if (onHandCardTap != null) onHandCardTap!(card);
                       },
@@ -63,8 +62,8 @@ class PlayerCard extends StatelessWidget {
                 children: [
                   for (final card in fishes)
                     GameCard(
-                      cardFace: CardFace(
-                          suite: card.suite, value: card.value.toString()),
+                      suite: card.$1,
+                      value: card.$2,
                     )
                 ],
               ),
