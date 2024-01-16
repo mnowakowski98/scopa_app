@@ -8,17 +8,15 @@ class PlayerCard extends StatelessWidget {
       required this.hand,
       required this.fishes,
       this.isCurrent = false,
-      this.onHandCardTap,
-      this.selectedHandCard,
-      this.scopas = 0});
+      this.scopas = 0,
+      this.teamScore});
 
   final bool isCurrent;
   final String name;
   final List<(String, String)> hand;
   final List<(String, String)> fishes;
-  final (String, String)? selectedHandCard;
-  final void Function((String, String) card)? onHandCardTap;
   final int scopas;
+  final int? teamScore;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +29,8 @@ class PlayerCard extends StatelessWidget {
             name,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
-          Text(scopas.toString()),
+          Text(
+              '${teamScore != null ? "Score: $teamScore " : ''}Scopas: $scopas'),
           if (hand.isNotEmpty)
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -41,10 +40,6 @@ class PlayerCard extends StatelessWidget {
                     GameCard(
                       suite: card.$1,
                       value: card.$2,
-                      onTap: () {
-                        if (onHandCardTap != null) onHandCardTap!(card);
-                      },
-                      isSelected: selectedHandCard == card,
                       enableDragging: isCurrent,
                     )
                 ],

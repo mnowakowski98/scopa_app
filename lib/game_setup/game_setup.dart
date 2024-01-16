@@ -47,16 +47,21 @@ class _GameSetupState extends State<GameSetup> {
                 ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => GamePage(
-                            game: Game([
-                                  for (final player in _unassignedPlayers)
-                                    Team.players([Player(player)]),
-                                ] +
-                                _teams.entries
-                                    .map((team) => Team.players(team.value
-                                        .map((player) => Player(player))
-                                        .toList()))
-                                    .toList())),
+                        builder: (context) {
+                          final unassignedTeams = [
+                            for (final player in _unassignedPlayers)
+                              Team.players([Player(player)]),
+                          ];
+                          return GamePage(
+                              game: Game(unassignedTeams +
+                                  _teams.entries
+                                      .map((team) => Team.players(
+                                          team.value
+                                              .map((player) => Player(player))
+                                              .toList(),
+                                          name: team.key))
+                                      .toList()));
+                        },
                       ));
                     },
                     child: const Text('Start')),

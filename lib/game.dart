@@ -2,154 +2,168 @@ import 'package:flutter/material.dart';
 import 'package:scopa_app/player_card.dart';
 import 'package:scopa_app/table_hand.dart';
 import 'package:scopa_app/team_card.dart';
-import 'package:scopa_app/winner_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
-import 'package:scopa_lib/tabletop_lib.dart' as tabletop_lib;
+import 'package:scopa_lib/tabletop_lib.dart' as tabletop show Card;
 
 class GamePage extends StatefulWidget {
-  const GamePage({super.key, required this.game});
+  const GamePage({
+    super.key,
+    required this.game,
+    this.initialRound,
+  });
 
   final Game game;
+  final ScopaRound? initialRound;
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
+class TeamInfo {
+  TeamInfo(
+      {required this.id,
+      required this.name,
+      required this.playerNames,
+      required this.score});
+
+  final int id;
+  final String name;
+  final List<String> playerNames;
+  final int score;
+}
+
 class _GamePageState extends State<GamePage> {
-  late ScopaRound currentRound;
-  late List<tabletop_lib.Card> tableCards;
-  late List<tabletop_lib.Card> selectedTableCards;
-  Iterable<tabletop_lib.Team> winningTeams = [];
+  var _teams = <TeamInfo>[];
+  var _tableCards = <(String, String)>[];
 
-  final playerCards = <String, List<tabletop_lib.Card>>{};
-  final playerFishes = <String, List<tabletop_lib.Card>>{};
-  final playerScopas = <String, int>{};
+  late ScopaRound _round;
+  late String _currentPlayer;
+  var _playerCards = <String, List<(String, String)>>{};
+  var _playerFish = <String, List<(String, String)>>{};
+  var _playerScopaCount = <String, int>{};
 
-  tabletop_lib.Card? selectedHandCard;
+  final _selectedCards = <(String, String)>[];
 
-  String? currentPlayer;
-  final teamsList = <Widget>[];
-
-  List<Widget> _buildTeamsList(
-      List<tabletop_lib.Team> teams, Map<tabletop_lib.Team, int> teamScores) {
-    teamsList.clear();
-    for (final team in teams) {
-      if (team.name.isNotEmpty || team.players.length > 1) {
-        teamsList.add(TeamCard(team: team, score: teamScores[team]!));
-      }
-      teamsList.addAll([
-        for (final player in team.players)
-          PlayerCard(
-            name: player.name,
-            hand: playerCards[player.name]!,
-            fishes: playerFishes[player.name]!,
-            scopas: playerScopas[player.name]!,
-            isCurrent: currentPlayer == player.name,
-          )
-      ]);
-    }
-    return teamsList;
-  }
-
-  void _refreshGameState() {
-    tableCards = List.unmodifiable(widget.game.table.round.cards);
-    currentPlayer = currentRound.currentPlayer?.name;
-    selectedHandCard = null;
-    selectedTableCards = [];
-
-    for (final seat in widget.game.table.seats) {
-      final player = seat.player!;
-      playerCards[player.name] = currentRound.playerHands[player]!.cards;
-      playerFishes[player.name] = currentRound.captureHands[player]!.cards;
-      playerScopas[player.name] = currentRound.scopas[player]!;
+  void _updateGameState() {
+    if (_round.currentPlayer != null) {
+      _currentPlayer = _round.currentPlayer!.name;
     }
 
-    _buildTeamsList(widget.game.teams, widget.game.teamScores);
-  }
+    _teams = [];
+    final teams = widget.game.teams;
+    for (var i = 0; i < teams.length; i++) {
+      final info = TeamInfo(
+          id: i,
+          name: teams[i].name,
+          playerNames: teams[i].players.map((player) => player.name).toList(),
+          score: widget.game.teamScores[teams[i]]!);
+      _teams.add(info);
+    }
 
-  void _resetGameState() {
-    setState(() {
-      _refreshGameState();
-    });
+    _tableCards = widget.game.table.round.cards
+        .map((card) => (card.suite, card.value.toString()))
+        .toList();
+
+    _playerCards = _round.playerHands.map((player, hand) => MapEntry(
+        player.name,
+        hand.cards
+            .map((card) => (card.suite, card.value.toString()))
+            .toList()));
+
+    _playerFish = _round.captureHands.map((player, hand) => MapEntry(
+        player.name,
+        hand.cards
+            .map((card) => (card.suite, card.value.toString()))
+            .toList()));
+
+    _playerScopaCount =
+        _round.scopas.map((player, score) => MapEntry(player.name, score));
   }
 
   @override
   void initState() {
+    _round = widget.initialRound == null
+        ? widget.game.nextRound()
+        : widget.initialRound!;
+
+    _updateGameState();
+
     super.initState();
-    currentRound = widget.game.nextRound();
-    _refreshGameState();
   }
 
-  void _selectTableCard(tabletop_lib.Card card) {
-    setState(() {
-      if (selectedTableCards.contains(card)) {
-        selectedTableCards.remove(card);
-      } else {
-        selectedTableCards.add(card);
+  void _playCard((String, String) playCard, List<(String, String)> matchCards) {
+    final playCardObj = tabletop.Card(playCard.$1, int.parse(playCard.$2));
+    final matchCardObjs = matchCards
+        .map((card) => tabletop.Card(card.$1, int.parse(card.$2)))
+        .toList();
+
+    if (_round.validatePlay(playCardObj, matchCardObjs) == false) {
+      return;
+    }
+
+    final roundState = _round.play(playCardObj, matchCardObjs);
+
+    if (roundState == false) {
+      final winners = widget.game.scoreRound(_round);
+      if (winners != null && winners.isNotEmpty) {
+        // TODO: Show winner cards
       }
+
+      _round = widget.game.nextRound();
+    }
+
+    setState(() {
+      _updateGameState();
+      _selectedCards.clear();
     });
   }
 
-  void _playCard(tabletop_lib.Card card, List<tabletop_lib.Card> matchCards) {
-    if (currentRound.validatePlay(card, matchCards) == false) return;
-
-    bool roundState;
-    if (matchCards.isEmpty) {
-      roundState = currentRound.play(card);
-    } else {
-      roundState = currentRound.play(card, matchCards);
-    }
-
-    // TODO: Find a way to rig deck to test this half of the function.
-    if (roundState == false) {
-      final winners = widget.game.scoreRound(currentRound);
-      if (winners != null && winners.isNotEmpty) {
-        setState(() {
-          winningTeams = winners;
-        });
-        return;
-      }
-
-      currentRound = widget.game.nextRound();
-      for (final seat in widget.game.table.seats) {
-        final player = seat.player!;
-        playerCards[player.name]!
-            .addAll(currentRound.playerHands[player]!.cards);
-      }
-    }
-    _resetGameState();
+  _setCardSelection((String, String) card) {
+    setState(() {
+      if (_selectedCards.remove(card) == true) return;
+      _selectedCards.add(card);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final winCard = Center(
-      child: WinnerCard(
-          teamScores: Map.fromEntries(widget.game.teamScores.entries
-              .where((element) => winningTeams.contains(element.key)))),
-    );
+    final teamsList = <Widget>[];
+    for (final teamInfo in _teams) {
+      final isNotSinglePlayerUnnamedTeam =
+          teamInfo.name.isNotEmpty == true || teamInfo.playerNames.length > 1;
+      if (isNotSinglePlayerUnnamedTeam) {
+        teamsList.add(TeamCard(score: teamInfo.score, teamName: teamInfo.name));
+      }
+      teamsList.addAll(teamInfo.playerNames.map((playerName) => PlayerCard(
+            name: playerName,
+            hand: _playerCards[playerName]!,
+            fishes: _playerFish[playerName]!,
+            teamScore: isNotSinglePlayerUnnamedTeam ? null : teamInfo.score,
+            isCurrent: _currentPlayer == playerName,
+          )));
+    }
 
     return Scaffold(
-        appBar: AppBar(title: const Text('Game')),
-        body: winningTeams.isEmpty
-            ? Column(
-                children: [
-                  Expanded(
-                    child: TableHand(
-                      cards: tableCards,
-                      selectedCards: selectedTableCards,
-                      onCardTap: _selectTableCard,
-                      onCardDrop: (card) => _playCard(card, selectedTableCards),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 5,
-                    child: ListView.builder(
-                      itemCount: teamsList.length,
-                      itemBuilder: (context, index) => teamsList[index],
-                    ),
-                  ),
-                ],
-              )
-            : winCard);
+      appBar: AppBar(
+        title: const Text('Scopa'),
+      ),
+      body: SafeArea(
+          child: Column(
+        children: [
+          TableHand(
+            cards: _tableCards,
+            selectedCards: _selectedCards,
+            onCardDrop: (card) => _playCard(card, _selectedCards),
+            onCardTap: _setCardSelection,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: teamsList.length,
+              itemBuilder: (context, index) => teamsList[index],
+            ),
+          ),
+        ],
+      )),
+    );
   }
 }

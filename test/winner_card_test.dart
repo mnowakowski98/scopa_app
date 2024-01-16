@@ -16,6 +16,7 @@ void main() {
       home: WinnerCard(teamScores: {'Test Team': 11}),
     ));
 
+    expect(find.text('Test Team'), findsOneWidget);
     expect(find.text('11'), findsOneWidget);
   });
 }
