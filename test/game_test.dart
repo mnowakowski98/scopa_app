@@ -194,18 +194,55 @@ void main() {
   testWidgets(
       'Can capture table cards by playing a card with table cards selected',
       (widgetTester) async {
+    final game = Game([
+      Team.players([
+        Player('Test'),
+      ])
+    ]);
+    final initialRound = ScopaRound(game.manager, game.table);
+    initialRound.resetPool();
+
+    final deck = game.manager.deck;
+    final playCard = deck.getCard('Denari', 3);
+    final matchCards = [deck.getCard('Bastoni', 1), deck.getCard('Coppe', 2)];
+    game.manager.dealAll([playCard, deck.getCard('Spade', 4)],
+        initialRound.playerHands[initialRound.currentPlayer]!);
+    game.manager
+        .dealAll(matchCards + [deck.getCard('Denari', 9)], game.table.round);
+
     await widgetTester.pumpWidget(MaterialApp(
         home: GamePage(
-            game: Game([
-      Team.players([Player('Test 1'), Player('Test 2')])
-    ]))));
+      game: game,
+      initialRound: initialRound,
+    )));
 
-    // TODO: Rig the deck somehow
+    final tableCard1 = find.textContaining('1');
+    final tableCard2 = find.textContaining('2');
 
-    // TODO: Select a table card
+    await widgetTester.tap(tableCard1);
+    await widgetTester.pump();
+    await widgetTester.tap(tableCard2);
+    await widgetTester.pump();
 
-    // TODO: Select drag a matching card from current player's hand to the table
+    final playerCard = find.textContaining('3');
+    final tableHand = find.byType(TableHand);
 
-    // TODO: Check both cards are in the current player's fishes
+    final gesture =
+        await widgetTester.startGesture(widgetTester.getCenter(playerCard));
+    await widgetTester.pump();
+    await gesture.moveTo(widgetTester.getCenter(tableHand));
+    await widgetTester.pump();
+    await gesture.up();
+    await widgetTester.pump();
+
+    final cardsInFish = [
+      find.descendant(of: find.byType(PlayerCard), matching: playerCard),
+      find.descendant(of: find.byType(PlayerCard), matching: tableCard1),
+      find.descendant(of: find.byType(PlayerCard), matching: tableCard2),
+    ];
+
+    for (final card in cardsInFish) {
+      expect(card, findsOneWidget);
+    }
   });
 }

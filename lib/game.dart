@@ -5,6 +5,29 @@ import 'package:scopa_app/team_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop show Card;
 
+/// A record of player information
+class PlayerInfo {
+  PlayerInfo(this.name, this.scopaCount);
+
+  final String name;
+  final int scopaCount;
+}
+
+/// A record of team information
+class TeamInfo {
+  TeamInfo(
+      {required this.id,
+      required this.name,
+      required this.players,
+      required this.score});
+
+  final int id;
+  final String name;
+  final List<PlayerInfo> players;
+  final int score;
+}
+
+/// The screen that a game of Scopa is played on
 class GamePage extends StatefulWidget {
   const GamePage({
     super.key,
@@ -12,36 +35,29 @@ class GamePage extends StatefulWidget {
     this.initialRound,
   });
 
+  /// The [Game] object that the state is derived from.
   final Game game;
+
+  /// An optional pre-configured round to start with.
+  /// Right now just for testing
   final ScopaRound? initialRound;
 
   @override
   State<GamePage> createState() => _GamePageState();
 }
 
-class TeamInfo {
-  TeamInfo(
-      {required this.id,
-      required this.name,
-      required this.playerNames,
-      required this.score});
-
-  final int id;
-  final String name;
-  final List<String> playerNames;
-  final int score;
-}
-
 class _GamePageState extends State<GamePage> {
+  // Game state
   var _teams = <TeamInfo>[];
   var _tableCards = <(String, String)>[];
 
+  // Round state
   late ScopaRound _round;
   late String _currentPlayer;
   var _playerCards = <String, List<(String, String)>>{};
   var _playerFish = <String, List<(String, String)>>{};
-  var _playerScopaCount = <String, int>{};
 
+  // UI state
   final _selectedCards = <(String, String)>[];
 
   void _updateGameState() {
@@ -55,7 +71,10 @@ class _GamePageState extends State<GamePage> {
       final info = TeamInfo(
           id: i,
           name: teams[i].name,
-          playerNames: teams[i].players.map((player) => player.name).toList(),
+          players: teams[i]
+              .players
+              .map((player) => PlayerInfo(player.name, _round.scopas[player]!))
+              .toList(),
           score: widget.game.teamScores[teams[i]]!);
       _teams.add(info);
     }
@@ -75,9 +94,6 @@ class _GamePageState extends State<GamePage> {
         hand.cards
             .map((card) => (card.suite, card.value.toString()))
             .toList()));
-
-    _playerScopaCount =
-        _round.scopas.map((player, score) => MapEntry(player.name, score));
   }
 
   @override
@@ -130,16 +146,17 @@ class _GamePageState extends State<GamePage> {
     final teamsList = <Widget>[];
     for (final teamInfo in _teams) {
       final isNotSinglePlayerUnnamedTeam =
-          teamInfo.name.isNotEmpty == true || teamInfo.playerNames.length > 1;
+          teamInfo.name.isNotEmpty == true || teamInfo.players.length > 1;
       if (isNotSinglePlayerUnnamedTeam) {
         teamsList.add(TeamCard(score: teamInfo.score, teamName: teamInfo.name));
       }
-      teamsList.addAll(teamInfo.playerNames.map((playerName) => PlayerCard(
-            name: playerName,
-            hand: _playerCards[playerName]!,
-            fishes: _playerFish[playerName]!,
+      teamsList.addAll(teamInfo.players.map((player) => PlayerCard(
+            name: player.name,
+            hand: _playerCards[player.name]!,
+            fishes: _playerFish[player.name]!,
             teamScore: isNotSinglePlayerUnnamedTeam ? null : teamInfo.score,
-            isCurrent: _currentPlayer == playerName,
+            isCurrent: _currentPlayer == player.name,
+            scopas: player.scopaCount,
           )));
     }
 
