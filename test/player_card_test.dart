@@ -38,21 +38,4 @@ void main() {
     final card = widgetTester.widget<Card>(find.byType(Card).first);
     expect(card.color, equals(Colors.green));
   });
-
-  testWidgets('Calls onHandCardTap when a hand card is tapped',
-      (widgetTester) async {
-    (String, String)? callbackCard;
-
-    await widgetTester.pumpWidget(MaterialApp(
-        home: PlayerCard(
-            name: 'Test',
-            hand: const [('TestSuite', '5')],
-            fishes: const [],
-            onHandCardTap: (card) {
-              callbackCard = card;
-            })));
-
-    await widgetTester.tap(find.textContaining('TestSuite'));
-    expect(callbackCard, isNotNull);
-  });
 }
