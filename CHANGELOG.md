@@ -1,10 +1,15 @@
+## 0.4.1
+
+- Technical changes
+- Players not in teams now show their scores on their card.
+
 ## 0.4.0
 
-- Added player registration for new games
+- Added player registration for new games.
 
 ## 0.3.1
 
-- Added a game ending screen
+- Added a game ending screen.
 
 ## 0.3.0
 

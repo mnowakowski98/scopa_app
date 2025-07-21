@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scopa_app/player_card.dart';
 import 'package:scopa_app/table_hand.dart';
 import 'package:scopa_app/team_card.dart';
+import 'package:scopa_app/winner_card.dart';
 import 'package:scopa_lib/scopa_lib.dart';
 import 'package:scopa_lib/tabletop_lib.dart' as tabletop show Card;
 
@@ -59,6 +60,7 @@ class _GamePageState extends State<GamePage> {
 
   // UI state
   final _selectedCards = <(String, String)>[];
+  final _winners = <TeamInfo>[];
 
   void _updateGameState() {
     if (_round.currentPlayer != null) {
@@ -122,7 +124,11 @@ class _GamePageState extends State<GamePage> {
     if (roundState == false) {
       final winners = widget.game.scoreRound(_round);
       if (winners != null && winners.isNotEmpty) {
-        // TODO: Show winner cards
+        setState(() {
+          _winners.addAll(winners.map(
+              (team) => _teams.singleWhere((info) => info.name == team.name)));
+        });
+        return;
       }
 
       _round = widget.game.nextRound();
@@ -165,22 +171,24 @@ class _GamePageState extends State<GamePage> {
         title: const Text('Scopa'),
       ),
       body: SafeArea(
-          child: Column(
-        children: [
-          TableHand(
-            cards: _tableCards,
-            selectedCards: _selectedCards,
-            onCardDrop: (card) => _playCard(card, _selectedCards),
-            onCardTap: _setCardSelection,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: teamsList.length,
-              itemBuilder: (context, index) => teamsList[index],
-            ),
-          ),
-        ],
-      )),
+          child: _winners.isEmpty
+              ? Column(
+                  children: [
+                    TableHand(
+                      cards: _tableCards,
+                      selectedCards: _selectedCards,
+                      onCardDrop: (card) => _playCard(card, _selectedCards),
+                      onCardTap: _setCardSelection,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: teamsList.length,
+                        itemBuilder: (context, index) => teamsList[index],
+                      ),
+                    ),
+                  ],
+                )
+              : WinnerCard(teamScores: {})),
     );
   }
 }
